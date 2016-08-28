@@ -1,0 +1,34 @@
+doctype html
+html(lang='zh')
+  head
+    meta(http-equiv="Content-Type", content='text/html; charset=utf-8')
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    title 一格旅行Dashboard
+    // STYLES
+    link(href='/dashboard/vendors/bootstrap/dist/css/bootstrap.min.css', rel='stylesheet')
+    link(href='/dashboard/vendors/font-awesome/css/font-awesome.min.css', rel='stylesheet')
+    link(href='/dashboard/vendors/nprogress/nprogress.css', rel='stylesheet')
+    link(href='/dashboard/stylesheets/custom.min.css', rel='stylesheet')
+    block css-external
+
+  body.nav-md
+    .container.body
+      .main_container
+        .col-md-3.left_col
+          .left_col.scroll-view
+            .navbar.nav_title(style='border: 0;')
+              a.site_title(href='/dashboard/')
+                i.fa.fa-paw
+                span 一格旅行Dashboard
+            .clearfix
+            // BEGIN: MENU PROFILE QUICK INFO
+            .profile
+              .profile_pic
+                img.img-circle.profile_img(src='/dashboard/images/img.jpg', alt='...')
+              .profile_info
+                span 欢迎,
+                h2 MiniBear0523
+            // END: MENU PROFILE QUICK INFO
+              

@@ -1,0 +1,67 @@
+.row.header-top
+  .container.clear-padding
+    .navbar-contact
+      .col-md-7.col-sm-6.clear-padding
+        a.transition-effect(href='#')
+          i.fa.fa-phone
+          |  (+86) 189-1198-3180
+        a.transition-effect(href='#')
+          i.fa.fa-envelope-o
+          |  skystarstudio@163.com
+      .col-md-5.col-sm-6.clear-padding.search-box
+        .col-md-6.col-xs-5.clear-padding
+          form
+            .input-group
+              input.form-control(type='text', name='search', required, placeholder='搜索')
+              span.input-group-addon
+                i.fa.fa-search.fa-fw
+        .col-md-6.col-cs-7.clear-padding.user-logged
+          a.transition-effect(href='#')
+            img(src='/front/images/user.jpg')
+            |  SkyStar Studio
+          a.transition-effect(href='#')
+            i.fa.fa-sign-out
+            |  登出
+  .clearfix
+  .row.light-menu
+    .container.clear-padding
+      // BEGIN: HEADER
+      .navbar-wrapper
+        .navbar.navbar-default(role='navigation')
+          // BEGIN: NAV-CONTAINER
+          .nav-container
+            .navbar-header
+              // BEGIN:  TOOGLE BUTTON (RESPONSIVE)
+              button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-collapse')
+                span.sr-only Toggle Navigation
+                span.icon-bar
+                span.icon-bar
+                span.icon-bar
+              // BEGIN: LOGIN
+              a.navbar-brand.logo(href='/') 一格旅行
+            // BEGIN: NAVIGATION
+            .navbar-collapse.collapse
+              ul.nav.navbar-nav.navbar-right
+                li
+                  a(href='/')
+                    i.fa.fa-home
+                    |  首页
+                li
+                  a(href='/diy')
+                    i.fa.fa-pencil
+                    |  私人定制
+                li
+                  a(href='/free')
+                    i.fa.fa-suitcase
+                    |  自由行
+                li
+                  a(href='/service')
+                    i.fa.fa-ship
+                    |  服务
+                li
+                  a(href='/about')
+                    i.fa.fa-bookmark
+                    |  关于我们
+            // END: NAVIGATION
+          // END: NAV-CONTAINER
+      // END: HEADER

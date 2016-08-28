@@ -1,0 +1,28 @@
+{
+  "name": "DIY_Travel_Server",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "body-parser": "~1.13.2",
+    "compression": "^1.6.2",
+    "cookie-parser": "~1.3.5",
+    "debug": "~2.2.0",
+    "es6-promise": "^3.2.1",
+    "es6-shim": "^0.35.1",
+    "express": "~4.13.1",
+    "express-session": "^1.14.0",
+    "jade": "~1.11.0",
+    "mongoosastic": "^4.0.2",
+    "mongoose": "^4.3.5",
+    "morgan": "~1.6.1",
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0",
+    "passport-local-mongoose": "^4.0.0",
+    "q": "^1.4.1",
+    "qjs": "0.0.2",
+    "serve-favicon": "~2.3.0"
+  }
+}

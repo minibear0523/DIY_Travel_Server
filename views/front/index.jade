@@ -1,0 +1,339 @@
+extends layout
+
+block content
+  .row
+    #room-gallery.carousel.slide.bg-slider(data-ride='carousel')
+      ol.carousel-indicators
+        li.active(data-target='#room-gallery', data-slide-to='0')
+        li.active(data-target='#room-gallery', data-slide-to='1')
+        li.active(data-target='#room-gallery', data-slide-to='2')
+      .carousel-inner(role='listbox')
+        .item.active
+          img(src='/front/images/media/detail/slide1.jpg', alt='SkyStarStudio')
+          .carousel-caption
+            .wrapper
+              h2
+                span 一格旅行
+              h4
+                | 您身边的
+                span 私人个人性化
+                | 定制师
+              a(href='#') 查看服务
+        .item
+          img(src='/front/images/media/detail/slide2.jpg', alt='SkyStarStudio')
+          .carousel-caption
+            .wrapper
+              h2
+                span 一格旅行
+              h4
+                | 您身边的
+                span 私人个人性化
+                | 定制师
+              a(href='#') 查看服务
+        .item
+          img(src='/front/images/media/detail/slide3.jpg', alt='SkyStarStudio')
+          .carousel-caption
+            .wrapper
+              h2
+                span 一格旅行
+              h4
+                | 您身边的
+                span 私人个人性化
+                | 定制师
+              a(href='#') 查看服务
+      a.left.carousel-control(href='#room-gallery', role='button', data-slide='prev')
+        span.fa.fa-chevron-left(aria-hidden='true')
+        span.sr-only 上一页
+      a.right.carousel-control(href='#room-gallery', role='button', data-slide='next')
+        span.fa.fa-chevron-right(aria-hidden='true')
+        span.sr-only 下一页
+  // BEGIN: SEARCH SECTION
+  .row.bottom-search
+    .container.clear-padding
+      .col-md-12.search-section
+        div(role='tabpanel')
+          // BEGIN: CATEGORY TAB
+          ul#searchTab.nav.nav-tabs.search-top(role='tablist')
+            li.text-center.active(role='presentation')
+              a(href='#DIY', aria-controls='DIY', role='tab', data-toggle='tab')
+                i.fa.fa-pencil
+                span 私人定制
+            li.text-center(role='presentation')
+              a(href='#FREE', aria-controls='FREE', role='tab', data-toggle='tab')
+                i.fa.fa-suitcase
+                span 自由行线路
+          // END: CATEGORY TAB
+          // BEGIN: TAB PANELS
+          .tab-content
+            // BEGIN: DIY TRAVEL
+            #DIY.tab-pane.active(role='rolepanel')
+              form
+                .col-md-12.product-search-title 私人定制需求单
+                .clearfix
+                .col-md-4.col-sm-4.search-col-padding
+                  label 出发地
+                  .input-group
+                    input.form-control(type='text', name='departure_city', required, placeholder='例如: 北京')
+                    span.input-group-addon
+                      i.fa.fa-map-marker.fa-fw
+                .col-md-4.col-sm-4.search-col-padding
+                  label 我想去...
+                  .input-group
+                    input.form-control(type='text', name='destination_city', required, placeholder='例如: 日本东京')
+                    span.input-group-addon
+                      i.fa.fa-map-marker.fa-fw
+                .col-md-4.col-sm-4.search-col-padding
+                  label 出发日期
+                  .input-group
+                    input#departure_date.form-control(type='text', name='departure_date', placeholder='YYYY/MM/DD')
+                    span.input-group-addon
+                      i.fa.fa-calendar.fa-fw
+                .clearfix
+                .col-md-4.col-sm-4.search-col-padding
+                  label 天数
+                  select.selectpicker(name='package_duration')
+                    option 5天
+                    option 7天
+                    option 12天
+                .col-md-4.col-sm-4.search-col-padding
+                  label 类型
+                  select.selectpicker(name='package_type')
+                    option 团体
+                    option 家庭
+                    option 个人
+                    option 蜜月
+                    option 亲子
+                .col-md-4.col-sm-4.search-col-padding
+                  label 预算
+                  select.selectpicker(name='package_budget')
+                    option 5000元以下
+                    option 5000元-10000元
+                    option 10000元以上
+                .clearfix
+                .col-md-12.search-col-padding
+                  button.search-button.btn.transition-effect(type='submit') 立即定制
+                .clearfix
+            // END: DIY TRAVEL
+            // BEGIN: FREE TRAVEL
+            #FREE.tab-pane(role='tabpanel')
+              form
+                .col-md-12.product-search-title 搜索自由行产品
+                .col-md-4.col-sm-4.search-col-padding
+                  label 出发地
+                  .input-group
+                    input.form-control(type='text', name='departure_city', required, placeholder='例如: 北京')
+                    span.input-group-addon
+                      i.fa.fa-map-marker.fa-fw
+                .col-md-4.col-sm-4.search-col-padding
+                  label 目的地
+                  .input-group
+                    input.form-control(type='text', name='destination_city', required, placeholder='例如: 日本东京')
+                    span.input-group-addon
+                      i.fa.fa-map-marker.fa-fw
+                .col-md-4.col-sm-4.search-col-padding
+                  label 出发日期
+                  .input-group
+                    input.form-control(type='text', id='departure_date', placeholder='YYYY/MM/DD')
+                    span.input-group-addon
+                      i.fa.fa-calendar.fa-fw
+                .clearfix
+                .col-md-4.col-sm-4.search-col-padding
+                  label 天数
+                  select.selectpicker(name='package_duration')
+                    option 5天
+                    option 7天
+                    option 12天
+                .col-md-4.col-sm-4.search-col-padding
+                  label 类型
+                  select.selectpicker(name='package_type')
+                    option 团体
+                    option 家庭
+                    option 个人
+                    option 蜜月
+                    option 亲子
+                .col-md-4.col-sm-4.search-col-padding
+                  label 预算
+                  select.selectpicker(name='package_budget')
+                    option 5000元以下
+                    option 5000元-10000元
+                    option 10000元以上
+                .clearfix
+                .col-md-12.search-col-padding
+                  button.search-button.btn.transition-effect(type='submit') 搜索
+                .clearfix
+            // END: FREE TRAVEL
+            // END: TAB PANELS
+  // END: SEARCH SECTION
+  section.hotel-product.home-product
+    .row.light-row
+      .col-md-6.clear-padding.wow.slideInLeft
+        .product-wrapper
+          .col-md-6.col-sm-6.home-product-padding.tooltip-right
+            h4 东京一地5日游
+            h5
+              i.fa.fa-map-marker
+              |  东京
+            p 这条东京一地的线路是我们专为一对情侣设计的, 不仅包含了当地特色的酒店以及日本文化和各种珍馐美味, 还有各种摄影和动漫相关的活动.
+            .rating-box
+              .pull-left
+                i.fa.fa-trophy
+                span  4.0/5.0
+              .pull-right
+                i.fa.fa-star
+                i.fa.fa-star
+                i.fa.fa-star
+                i.fa.fa-star
+                i.fa.fa-star-o
+                span  4.0/5.0
+            .clearfix
+            .pricing-info
+              .pull-left
+                span 8000元/人
+              .pull-right
+                a.wow.fadeIn(href='#') 预定
+            .clearfix
+          .col-md-6.col-sm-6.clear-padding.image-sm.text-center
+            img(src='/front/images/media/detail/tokyo.jpg', alt='SkyStarStudio')
+            .detail-link-wrapper
+              .detail-link
+                a(href='#')
+                  i.fa.fa-search
+        .clearfix
+        .product-wrapper
+          .col-md-6.col-sm-6.clear-padding.image-sm.text-center
+            img(src='/front/images/media/detail/tokyo.jpg', alt='SkyStarStudio')
+            .detail-link-wrapper
+              .detail-link
+                a(href='#')
+                  i.fa.fa-search
+          .col-md-6.col-sm-6.home-product-padding.tooltip-left
+            h4 大阪京都5日游
+            h5
+              i.fa.fa-map-marker
+              |  日本
+            p 体验日本经典文化, 游览大阪和京都的古典建筑. 不仅包括了经典的日本特色景点, 还可以体验温泉,茶道等日本特色文化活动.
+            .rating-box
+              .pull-left
+                i.fa.fa-trophy
+                span  4.5/5.0
+              .pull-right
+                i.fa.fa-star
+                i.fa.fa-star
+                i.fa.fa-star
+                i.fa.fa-star
+                i.fa.fa-star-half-o
+                span  4.5/5.0
+            .clearfix
+            .pricing-info
+              .pull-left
+                span 9500元/人
+              .pull-right
+                a.wow.fadeIn(href='#') 预定
+            .clearfix
+      .clearfix.visible-sm-block
+      .col-md-6.clear-padding.image-lg.wow.slideInRight
+        img(src='/front/images/media/detail/hokkaido.jpg')
+        .overlay
+          .product-detail.text-center
+            h3 北海道全景7日游
+            h5
+              i.fa.fa-map-marker
+              |  北海道
+            p 日本北海道全景7日游
+            .rating-box
+              .pull-left
+                i.fa.fa-trophy
+                span  5.0/5.0
+              .pull-right
+                i.fa.fa-star
+                i.fa.fa-star
+                i.fa.fa-star
+                i.fa.fa-star
+                i.fa.fa-star
+                span  5.0/5.0
+            .clearfix
+            .pricing-info
+              .pull-left
+                span 13000元/人
+              .pull-right
+                a.wow.fadeIn(href='#') 预定
+            .clearfix
+    // END: PRODUCT SECTION
+  // BEGIN: TOP DWSTINATION SECTION
+  section#home-top-destination
+    .row.image-background
+      .td-overlay
+        .container
+          .light-section-title.text-center
+            h2 最后欢迎目的地
+            h4 探索
+            .space
+            p
+          .col-md-10.col-md-offset-1.on-top.clear-padding
+            .col-md-6.col-sm-6.td-product.text-center.clear-padding.wow.slideInUp(data-wow-delay='0.1s')
+              img(src='/front/images/media/detail/osaka.jpg', alt='skystarstudio')
+              .overlay
+                .wrapper
+                  h5 东京
+                  h3
+                    span 现代化都市与日本传统文化的完美结合
+                  p 现代化都市与日本传统文化的完美结合
+                  a(href='#') 了解更多
+            .col-md-6.col-sm-6.td-product.text-center.clear-padding.wow.slideInUp(data-wow-delay='0.2s')
+              img(src='/front/images/media/detail/osaka.jpg', alt='skystarstudio')
+              .overlay
+                .wrapper
+                  h5 东京
+                  h3
+                    span 现代化都市与日本传统文化的完美结合
+                  p 现代化都市与日本传统文化的完美结合
+                  a(href='#') 了解更多
+            .col-md-6.col-sm-6.td-product.text-center.clear-padding.wow.slideInUp(data-wow-delay='0.1s')
+              img(src='/front/images/media/detail/osaka.jpg', alt='skystarstudio')
+              .overlay
+                .wrapper
+                  h5 东京
+                  h3
+                    span 现代化都市与日本传统文化的完美结合
+                  p 现代化都市与日本传统文化的完美结合
+                  a(href='#') 了解更多
+            .col-md-6.col-sm-6.td-product.text-center.clear-padding.wow.slideInUp(data-wow-delay='0.2s')
+              img(src='/front/images/media/detail/osaka.jpg', alt='skystarstudio')
+              .overlay
+                .wrapper
+                  h5 东京
+                  h3
+                    span 现代化都市与日本传统文化的完美结合
+                  p 现代化都市与日本传统文化的完美结合
+                  a(href='#') 了解更多
+  // END: TOP DESTINATION SECTION
+  // BEGIN: WHY CHOOSE US SECTION
+  section#why-choose-us
+    .row.choose-us-row
+      .container.clear-padding
+        .section-title.text-center
+          h2 为什么选择我们?
+          h4 相信我们的理由
+          .space
+          p 独一无二的体验, 贴心的定制, 终身难忘的旅程
+      .col-md-4.col-sm-4.wow.slideInLeft
+        .choose-us-item.text-center
+          .choose-icon
+            i.fa.fa-suitcase
+          h4 个性化旅行
+          p 根据您的兴趣和需求, 加上我们专业的分析, 为您定制一次独一无二的个性化旅行, 为您留下一趟终身难忘的旅行回忆.
+          a(href='#') 了解更多
+      .col-md-4.col-sm-4.wow.slideInUp
+        .choose-us-item.text-center
+          .choose-icon
+            i.fa.fa-phone
+          h4 贴心服务
+          p 不仅为您定制一套个性化的旅行线路, 还会为您制作一套精心准备的个性化路书, 让您体验到旅行管家的服务.
+          a(href='#') 了解更多
+      .col-md-4.col-sm-4.wow.slideInRight
+        .choose-us-item.text-center
+          .choose-icon
+            i.fa.fa-smile-o
+          h4 透明化价格
+          p 收费合理并且透明, 为您提供详细的价格明细, 让您消费的明白, 玩的开心, 不花冤枉钱, 留下美好的回忆.
+          a(href='#') 了解更多
