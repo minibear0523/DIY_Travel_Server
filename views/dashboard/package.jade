@@ -76,6 +76,29 @@ block content
             | 缩略图
           .col-md-8.col-sm-8.col-xs-12
             #package-thumbnails.dropzone(action='/image/upload')
+    #step-2
+      form#detail-form.form-horizontal.form-label-left.input-mask
+        .form-group
+          label.control-label.col-md-3.col-sm-3.col-xs-12(for='schedule-title')
+            | 标题
+          .col-md-8.col-sm-8.col-xs-12
+            input#schedule-title.form-control(type='text', name='schedule-title')
+        .form-group
+          label.control-label.col-md-3.col-sm-3.col-xs-12(for='schedule-detail')
+            | 详情
+          .col-md-8.col-sm-8.col-xs-12
+            textarea#schedule-detail.form-control(name='schedule-detail', data-parsley-trigger='keyup', data-parsley-minlength='60', data-parsley-max-length='400')
+        .form-group
+          label.control-label.col-md-3.col-sm-3.col-xs-12(for='schedule-tags')
+            | 包含
+          .col-md-8.col-sm-8.col-xs-12
+            input.tags.form-control(type='text')
+        .form-group
+          label.control-label.col-md-3.col-sm-3.col-xs-12(for='schedule-thumbnails')
+            | 缩略图
+          .col-md-8.col-sm-8.col-xs-12
+            #schedule-thumbnail.dropzone(action='/image/upload')
+
 block js-external
   script(src='/dashboard/vendors/jQuery-Smart-Wizard/js/jquery.smartWizard.js')
   script(src='/dashboard/vendors/jquery.tagsinput/src/jquery.tagsinput.js')

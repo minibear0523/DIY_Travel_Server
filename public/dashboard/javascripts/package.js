@@ -9,6 +9,9 @@
     $('#package-tags').tagsInput({
       width: 'auto'
     });
+    $('.tags').tagsInput({
+      'width': 'auto'
+    });
     // $('#package-thumbnails').dropzone({
     //   url: '/package/thumbnails/upload'
     // });
