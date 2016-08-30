@@ -1938,7 +1938,11 @@ legend {
 
 .form-control-feedback.right {
   border-left: 1px solid #ccc;
-  right: 13px; }
+  height: 34px;
+  width: 56px;
+  padding: 7px;
+  margin: 0;
+  right: 10px; }
 
 .form-control.has-feedback-left {
   padding-left: 45px; }
@@ -3558,13 +3562,14 @@ fieldset {
   margin: 0;
   padding: 0;
   border: 0 solid #CCC;
-  overflow-x: hidden; }
+}
 
 .wizard_horizontal ul.wizard_steps {
   display: table;
   list-style: none;
   position: relative;
   width: 100%;
+  padding-left: 0;
   margin: 0 0 20px; }
 
 .wizard_horizontal ul.wizard_steps li {
