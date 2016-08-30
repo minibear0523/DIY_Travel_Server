@@ -12,6 +12,8 @@ block css-external
   link(href='/dashboard/vendors/starrr/dist/starrr.css', rel='stylesheet')
   // Dropzone.js
   link(href='/dashboard/vendors/dropzone/dist/min/dropzone.min.css', rel='stylesheet')
+  // iCheck
+  link(href='/dashboard/vendors/iCheck/skins/flat/green.css', rel='stylesheet')
 
 block content
   p 添加或修改旅行线路
@@ -77,30 +79,62 @@ block content
           .col-md-8.col-sm-8.col-xs-12
             #package-thumbnails.dropzone(action='/image/upload')
     #step-2
-      form#detail-form.form-horizontal.form-label-left.input-mask
-        .form-group
-          label.control-label.col-md-3.col-sm-3.col-xs-12(for='schedule-title')
-            | 标题
-          .col-md-8.col-sm-8.col-xs-12
-            input#schedule-title.form-control(type='text', name='schedule-title')
-        .form-group
-          label.control-label.col-md-3.col-sm-3.col-xs-12(for='schedule-detail')
-            | 详情
-          .col-md-8.col-sm-8.col-xs-12
-            textarea#schedule-detail.form-control(name='schedule-detail', data-parsley-trigger='keyup', data-parsley-minlength='60', data-parsley-max-length='400')
-        .form-group
-          label.control-label.col-md-3.col-sm-3.col-xs-12(for='schedule-tags')
-            | 包含
-          .col-md-8.col-sm-8.col-xs-12
-            input.tags.form-control(type='text')
-        .form-group
-          label.control-label.col-md-3.col-sm-3.col-xs-12(for='schedule-thumbnails')
-            | 缩略图
-          .col-md-8.col-sm-8.col-xs-12
-            #schedule-thumbnail.dropzone(action='/image/upload')
+      .row
+        .col-xs-12.table-responsive
+          table.table.table-striped.jambo_table.bulk_action
+            thead
+              tr.headings
+                th
+                  input#check-all.flat(type='checkbox')
+                th.column-title 日期
+                th.column-title 标题
+                th.column-title 详情
+                th.column-title 包含
+                th.column-title 缩略图
+                th.column-title.no-links.last
+                  span.nobr Action
+            tbody
+              tr.even.pointer
+                td.a-center
+                  input.flat(type='checkbox', name='table_records')
+                td 第一天
+                td 抵达东京
+                td 从北京乘坐上午的航班, 经过大约4小时的飞行之后, 我们下午就会到达日本首府 ——东京, 先到酒店CheckIn, 放好行李, 随后前往森美术馆参观后来到52层的观景台, 如果天气条件允许的话, 还有机会可以上屋顶的露天观景台俯瞰东京的城市夜景. 不仅如此, 还可在这层的Mado Lounge点杯小酒, 享受这惬意的氛围.随后回酒店, 好好休息!
+                td 森美术馆, 东京夜景
+                td
+                  img(src='/dashboard/images/img.jpg')
+                td.last
+                  a(href='#') View
+        .col-xs-12
+          form#detail-form.form-horizontal.form-label-left.input-mask
+            .form-group
+              label.control-label.col-md-3.col-sm-3.col-xs-12(for='schedule-title')
+                | 标题
+              .col-md-8.col-sm-8.col-xs-12
+                input#schedule-title.form-control(type='text', name='schedule-title')
+            .form-group
+              label.control-label.col-md-3.col-sm-3.col-xs-12(for='schedule-detail')
+                | 详情
+              .col-md-8.col-sm-8.col-xs-12
+                textarea#schedule-detail.form-control(rows='4', name='schedule-detail', data-parsley-trigger='keyup', data-parsley-minlength='60', data-parsley-max-length='400')
+            .form-group
+              label.control-label.col-md-3.col-sm-3.col-xs-12(for='schedule-tags')
+                | 包含
+              .col-md-8.col-sm-8.col-xs-12
+                input.tags.form-control(type='text')
+            .form-group
+              label.control-label.col-md-3.col-sm-3.col-xs-12(for='schedule-thumbnails')
+                | 缩略图
+              .col-md-8.col-sm-8.col-xs-12
+                #schedule-thumbnail.dropzone(action='/image/upload')
+            .form-group
+              .col-md-9.col-sm-9.col-xs-12.col-md-offset-3
+                button#schedule-save-btn.btn.btn-success 保存
+                button#schedule-save-continue-btn.btn.btn-primary 保存并继续添加
 
 block js-external
   script(src='/dashboard/vendors/jQuery-Smart-Wizard/js/jquery.smartWizard.js')
   script(src='/dashboard/vendors/jquery.tagsinput/src/jquery.tagsinput.js')
   script(src='/dashboard/vendors/dropzone/dist/min/dropzone.min.js')
+  script(src='/dashboard/vendors/iCheck/icheck.min.js')
   script(src='/dashboard/javascripts/package.js')
