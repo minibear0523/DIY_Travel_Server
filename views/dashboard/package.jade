@@ -1,0 +1,83 @@
+extends layout
+block css-external
+  // iCheck
+  link(href='/dashboard/vendors/iCheck/skins/flat/green.css', rel='stylesheet')
+  // bootstrap-wysiwyg
+  link(href='/dashboard/vendors/google-code-prettify/bin/prettify.min.css', rel='stylesheet')
+  // Select2
+  link(href='/dashboard/vendors/select2/dist/css/select2.min.css', rel='stylesheet')
+  // Switchery
+  link(href='/dashboard/vendors/switchery/dist/switchery.min.css', rel='stylesheet')
+  // starrr
+  link(href='/dashboard/vendors/starrr/dist/starrr.css', rel='stylesheet')
+  // Dropzone.js
+  link(href='/dashboard/vendors/dropzone/dist/min/dropzone.min.css', rel='stylesheet')
+
+block content
+  p 添加或修改旅行线路
+  #wizard.form_wizard.wizard_horizontal
+    ul.wizard_steps
+      li
+        a(href='#step-1')
+          span.step_no 1
+          span.step_descr
+            | 步骤1
+            br
+            small 线路基本信息
+      li
+        a(href='#step-2')
+          span.step_no 2
+          span.step_descr
+            | 步骤2
+            br
+            small 线路详细信息
+      li
+        a(href='#step-3')
+          span.step_no 3
+          span.step_descr
+            | 步骤3
+            br
+            small 酒店航班信息
+      li
+        a(href='#step-4')
+          span.step_no 4
+          span.step_descr
+            | 步骤4
+            br
+            small 附加信息
+    #step-1
+      form#basic-info-form.form-horizontal.form-label-left.input-mask
+        .form-group
+          label.control-label.col-md-3.col-sm-3.col-xs-12(for='package-title')
+            | 标题
+            span.required *
+          .col-md-8.col-sm-8.col-xs-12
+            input#package-title.form-control.col-md-7.col-xs-12(type='text', required='required')
+        .form-group
+          label.control-label.col-md-3.col-sm-3.col-xs-12(for='package-price')
+            | 价格
+            span.required *
+          .col-md-4.col-sm-4.col-xs-12
+            input#package-price.form-control.col-md-7.col-xs-12(type='text', required='required')
+            span.form-control-feedback.right 元/人
+        .form-group
+          label.control-label.col-md-3.col-sm-3.col-xs-12(for='package-abstract')
+            | 概述
+            span.required *
+          .col-md-8.col-sm-8.col-xs-12
+            textarea#package-abstract.form-control.col-md-12.col-xs-12(name='package-abstract', data-parsley-trigger='keyup', data-parsley-minlength='20', data-parsley-max-length='200')
+        .form-group
+          label.control-label.col-md-3.col-sm-3.col-xs-12(for='package-tags')
+            | 标签
+          .col-md-8.col-sm-8.col-xs-12
+            input#package-tags.tags.form-control(type='text')
+        .form-group
+          label.control-label.col-md-3.col-sm-3.col-xs-12(for='package-thumbnails')
+            | 缩略图
+          .col-md-8.col-sm-8.col-xs-12
+            #package-thumbnails.dropzone(action='/image/upload')
+block js-external
+  script(src='/dashboard/vendors/jQuery-Smart-Wizard/js/jquery.smartWizard.js')
+  script(src='/dashboard/vendors/jquery.tagsinput/src/jquery.tagsinput.js')
+  script(src='/dashboard/vendors/dropzone/dist/min/dropzone.min.js')
+  script(src='/dashboard/javascripts/package.js')
