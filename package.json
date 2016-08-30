@@ -3,7 +3,12 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "supervisor ./bin/www"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-cssmin": "^0.1.7",
+    "gulp-rename": "^1.2.2"
   },
   "dependencies": {
     "bigpipe": "^0.9.14",
