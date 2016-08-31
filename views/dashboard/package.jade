@@ -80,19 +80,25 @@ block content
             #package-thumbnails.dropzone(action='/image/upload')
     #step-2
       .row
-        .col-xs-12.table-responsive
-          table.table.table-striped.jambo_table.bulk_action
+        .col-xs-10.col-xs-offset-1.table-responsive
+          table#detail-table.table.table-striped.jambo_table.bulk_action
             thead
               tr.headings
                 th
                   input#check-all.flat(type='checkbox')
-                th.column-title 日期
-                th.column-title 标题
-                th.column-title 详情
-                th.column-title 包含
-                th.column-title 缩略图
+                th.column-title.a-center 日期
+                th.column-title.a-center 标题
+                th.column-title.a-center 详情
+                th.column-title.a-center 包含
+                th.column-title.a-center 缩略图
                 th.column-title.no-links.last
                   span.nobr Action
+                th.bulk-actions(colspan='7')
+                  a.antoo(style='color:#fff; font-weight:500;')
+                    | 批量操作 (
+                    span.action-cnt
+                    |  )
+                    i.fa.fa-chevron-down
             tbody
               tr.even.pointer
                 td.a-center
@@ -105,6 +111,7 @@ block content
                   img(src='/dashboard/images/img.jpg')
                 td.last
                   a(href='#') View
+      .row
         .col-xs-12
           form#detail-form.form-horizontal.form-label-left.input-mask
             .form-group
@@ -130,7 +137,64 @@ block content
             .form-group
               .col-md-9.col-sm-9.col-xs-12.col-md-offset-3
                 button#schedule-save-btn.btn.btn-success 保存
-                button#schedule-save-continue-btn.btn.btn-primary 保存并继续添加
+    #step-3
+      .row
+        .col-xs-10.col-xs-offset-1.table-responsive
+          table#hotels-table.table.table-striped.jambo_table.bulk-actions
+            thead
+              tr.headings
+                th
+                  input#check-all.flat(type='checkbox')
+                th.column-title.a-center 酒店名称
+                th.column-title.a-center 入住天数
+                th.column-title.no-link.last
+                  span.nobr 操作
+                th.bulk-actions(colspan='3')
+                  a.antoo(style='color:#fff; font-weight:500;')
+                    | 批量操作 (
+                    span.action-cnt
+                    | )
+                    i.fa.fa-chevron-down
+            tbody
+              tr.even.pointer
+                td.a-center
+                  input.flat(type='checkbox', name='table_records')
+                td 江户樱花饭店 The Edo Sakura
+                td 3天
+                td.last
+                  a(href='#') View
+              td.even.pointer
+                td.a-center
+                  input.flat(type='checkbox', name='table_records')
+                td 东京千禧三井花园饭店
+                td 2天
+                td.last
+                  a(href='#') View
+      .row
+        .col-xs-12
+          form#hotels-form.form-horizontal.form-label-left.input-mask
+            .form-group
+              label.control-label.col-md-3.col-sm-3.col-xs-12(for='package-hotels-title')
+                | 酒店名称
+              .col-md-8.col-sm-8.col-xs-12
+                input#package-hotels-title.form-control(type='text')
+            .form-group
+              label.control-label.col-md-3.col-sm-3.col-xs-12(for='package-hotels-duration')
+                | 入住天数
+              .col-md-8.col-sm-8.col-xs-12
+                input#package-hotels-duration.form-control(type='text')
+    #step-4
+      form#inclusion-exclusion-form.form-horizontal.form-label-left.input-mask
+        .form-group
+          label.control-label.col-md-3.col-sm-3.col-xs-12(for='package-inclusion')
+            | 包含
+          .col-md-8.col-sm-8.col-xs-12
+            input#package-inclusion.form-control.tags(type='text')
+        .form-group
+          label.control-label.col-md-3.col-sm-3.col-xs-12(for='package-exclusion')
+            | 不包含
+          .col-md-8.col-sm-8.col-xs-12
+            input#package-exclusion.form-control.tags(type='text')
 
 block js-external
   script(src='/dashboard/vendors/jQuery-Smart-Wizard/js/jquery.smartWizard.js')

@@ -1,6 +1,15 @@
 (function ($) {
   'use strict';
 
+  /*
+   * 保存单日行程
+   */
+  function saveSchedule(e) {
+    e.preventDefault();
+    console.log('save btn clicked');
+  }
+
+
   $(function () {
 
     $('#package-tags').tagsInput({
@@ -16,5 +25,6 @@
     $('.buttonNext').addClass('btn btn-success');
     $('.buttonPrevious').addClass('btn btn-primary');
     $('.buttonFinish').addClass('btn btn-default');
+    $('#schedule-save-btn').on('click', saveSchedule);
   });
 }(jQuery));
