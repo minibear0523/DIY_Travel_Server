@@ -54,25 +54,25 @@ block content
             | 标题
             span.required *
           .col-md-8.col-sm-8.col-xs-12
-            input#package-title.form-control.col-md-7.col-xs-12(type='text', required='required')
+            input#package-title.form-control.col-md-7.col-xs-12(type='text', required='required', name='package-title')
         .form-group
           label.control-label.col-md-3.col-sm-3.col-xs-12(for='package-price')
             | 价格
             span.required *
           .col-md-8.col-sm-8.col-xs-12
-            input#package-price.form-control.col-md-7.col-xs-12(type='text', required='required')
+            input#package-price.form-control.col-md-7.col-xs-12(type='text', required='required', name='package-price')
             span.form-control-feedback.right 元/人
         .form-group
           label.control-label.col-md-3.col-sm-3.col-xs-12(for='package-abstract')
             | 概述
             span.required *
           .col-md-8.col-sm-8.col-xs-12
-            textarea#package-abstract.form-control.col-md-12.col-xs-12(name='package-abstract', data-parsley-trigger='keyup', data-parsley-minlength='20', data-parsley-max-length='200')
+            textarea#package-abstract.form-control.col-md-12.col-xs-12(name='package-abstract', data-parsley-trigger='keyup', data-parsley-minlength='20', data-parsley-max-length='200', rows='5')
         .form-group
           label.control-label.col-md-3.col-sm-3.col-xs-12(for='package-tags')
             | 标签
           .col-md-8.col-sm-8.col-xs-12
-            input#package-tags.tags.form-control(type='text')
+            input#package-tags.tags.form-control(type='text', name='package-tags')
         .form-group
           label.control-label.col-md-3.col-sm-3.col-xs-12(for='package-thumbnails')
             | 缩略图
@@ -123,7 +123,7 @@ block content
               label.control-label.col-md-3.col-sm-3.col-xs-12(for='schedule-detail')
                 | 详情
               .col-md-8.col-sm-8.col-xs-12
-                textarea#schedule-detail.form-control(rows='4', name='schedule-detail', data-parsley-trigger='keyup', data-parsley-minlength='60', data-parsley-max-length='400')
+                textarea#schedule-detail.form-control(rows='4', name='schedule-detail', data-parsley-trigger='keyup', data-parsley-minlength='60', data-parsley-maxlength='400')
             .form-group
               label.control-label.col-md-3.col-sm-3.col-xs-12(for='schedule-tags')
                 | 包含
