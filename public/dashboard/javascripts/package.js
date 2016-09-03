@@ -40,6 +40,10 @@
     scheduleView.innerHTML = '<a href="#">View</a>';
   }
 
+  function resetFormHeight($form) {
+    $form.find('.stepContainer').css('height', 'auto');
+  }
+
   $(function () {
 
     $('#package-tags').tagsInput({
@@ -52,8 +56,20 @@
     formWizard.smartWizard();
     formWizard.find('.stepContainer').css('height', 'auto');
 
-    $('.buttonNext').addClass('btn btn-success');
-    $('.buttonPrevious').addClass('btn btn-primary');
+    console.log(formWizard);
+
+    $('.buttonNext')
+      .addClass('btn btn-success')
+      .on('click', function () {
+        resetFormHeight(formWizard);
+      });
+
+    $('.buttonPrevious')
+      .addClass('btn btn-primary')
+      .on('click', function () {
+        resetFormHeight(formWizard);
+      });
+
     $('.buttonFinish').addClass('btn btn-default');
     $('#schedule-save-btn').on('click', saveSchedule);
   });
