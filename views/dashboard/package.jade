@@ -92,15 +92,6 @@ block content
                 th.column-title.no-links.last
                   span.nobr Action
             tbody
-              tr.even.pointer
-                td 第一天
-                td 抵达东京
-                td 从北京乘坐上午的航班, 经过大约4小时的飞行之后, 我们下午就会到达日本首府 ——东京, 先到酒店CheckIn, 放好行李, 随后前往森美术馆参观后来到52层的观景台, 如果天气条件允许的话, 还有机会可以上屋顶的露天观景台俯瞰东京的城市夜景. 不仅如此, 还可在这层的Mado Lounge点杯小酒, 享受这惬意的氛围.随后回酒店, 好好休息!
-                td 森美术馆, 东京夜景
-                td
-                  img(src='/dashboard/images/img.jpg')
-                td.last
-                  a(href='#') View
       .row
         .col-xs-12
           form#detail-form.form-horizontal.form-label-left.input-mask
@@ -138,16 +129,6 @@ block content
                 th.column-title.no-link.last
                   span.nobr 操作
             tbody
-              tr.pointer
-                td 江户樱花饭店 The Edo Sakura
-                td 3天
-                td.last
-                  a(href='#') View
-              tr.pointer
-                td 东京千禧三井花园饭店
-                td 2天
-                td.last
-                  a(href='#') View
       .row
         .col-xs-12
           form#hotels-form.form-horizontal.form-label-left.input-mask
@@ -161,6 +142,9 @@ block content
                 | 入住天数
               .col-md-8.col-sm-8.col-xs-12
                 input#package-hotels-duration.form-control(type='text')
+            .form-group
+              .col-md-9.col-sm-9.col-xs-12.col-md-offset-3
+                button#hotel-save-btn.btn.btn-success 保存
     #step-4
       form#inclusion-exclusion-form.form-horizontal.form-label-left.input-mask
         .form-group
