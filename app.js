@@ -38,6 +38,7 @@ app.use(cookieParser());
 app.enable('trust proxy');
 // static files
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'uploads')));
 
 // session
 app.use(session({
