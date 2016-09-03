@@ -13,7 +13,15 @@
     scheduleData['tags'] = $detailForm.elements[2].value;
     // TODO: 获取上传的图片
 
+    // 将数据插入到table中.
     insertScheduleRow(scheduleData);
+    // 插入完成之后, 进行重置
+    $detailForm.reset();
+    // tagsInput需要额外处理
+    var $scheduleInclusionTagsInput = $('#schedule-inclusion-tags');
+    scheduleData['tags'].split(',').forEach(function(tag) {
+      $scheduleInclusionTagsInput.removeTag(tag);
+    });
   }
 
   /**
@@ -24,8 +32,6 @@
     var $detailTable = $('#detail-table')[0];
     var days = "第" + $detailTable.rows.length + "天";
     var row = $detailTable.insertRow();
-    var checkbox = row.insertCell();
-    checkbox.innerHTML = '<div class="icheckbox_flat-green" style="position: relative;"><input type="checkbox" name="table_records" class="flat" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; border: 0px; opacity: 0; background: rgb(255, 255, 255);"></ins></div>';
     var scheduleDay = row.insertCell();
     scheduleDay.innerHTML = days;
     var scheduleTitle = row.insertCell();
@@ -38,14 +44,17 @@
     scheduleThumbnail.innerHTML = '<img src="/dashboard/images/img.jpg">'
     var scheduleView = row.insertCell();
     scheduleView.innerHTML = '<a href="#">View</a>';
+    scheduleView.setAttribute('class', 'last');
   }
 
+  /**
+   * 设置parentContainer的高度
+   */
   function resetFormHeight($form) {
     $form.find('.stepContainer').css('height', 'auto');
   }
 
   $(function () {
-
     $('#package-tags').tagsInput({
       width: 'auto'
     });
@@ -55,8 +64,6 @@
     var formWizard = $('#wizard');
     formWizard.smartWizard();
     formWizard.find('.stepContainer').css('height', 'auto');
-
-    console.log(formWizard);
 
     $('.buttonNext')
       .addClass('btn btn-success')
