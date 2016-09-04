@@ -23,17 +23,17 @@ var packageStorage = multer.diskStorage({
  */
 router.post('/package', multer({
   storage: packageStorage,
-  limits: {fieldSize: 5 * 1024 * 1024}}).single('file'),
+  limits: {fieldSize: 5 * 1024 * 1024}}).single('thumbnail'),
   function(req, res, next) {
-  var data = {
-    url: '/package/' + req.file.filename,
-    path: req.file.path,
-    size: req.file.size,
-    filename: req.file.filename,
-    delete_url: '/uploads/package/' + req.file.filename,
-    delete_tpye: 'DELETE'
-  }
-  res.status(201).send(data);
+    var data = {
+      url: '/package/' + req.file.filename,
+      path: req.file.path,
+      size: req.file.size,
+      filename: req.file.filename,
+      delete_url: '/uploads/package/' + req.file.filename,
+      delete_tpye: 'DELETE'
+    };
+    res.status(201).send(data);
 });
 
 /**
@@ -50,3 +50,5 @@ router.delete('/package/:filename', function(req, res, next) {
     }
   });
 });
+
+module.exports = router;

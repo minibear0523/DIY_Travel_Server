@@ -20,6 +20,7 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var package = require('./routes/package');
 var dashboard = require('./routes/dashboard');
+var uploads = require('./routes/uploads');
 
 var app = express();
 
@@ -68,11 +69,13 @@ app.use('/', routes);
 app.use('/users', users);
 app.use('/packages', package);
 app.use('/dashboard', dashboard);
+app.use('/uploads', uploads);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;
+  console.log(err);
   next(err);
 });
 
@@ -83,6 +86,7 @@ app.use(function(req, res, next) {
 if (app.get('env') === 'development') {
   app.use(function(err, req, res, next) {
     res.status(err.status || 500);
+    console.log(err);
     res.render('error', {
       message: err.message,
       error: err
@@ -94,6 +98,7 @@ if (app.get('env') === 'development') {
 // no stacktraces leaked to user
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
+  console.log(err);
   res.render('error', {
     message: err.message,
     error: {}

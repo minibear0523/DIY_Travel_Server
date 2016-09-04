@@ -11,8 +11,6 @@
     scheduleData['title'] = $detailForm.elements[0].value;
     scheduleData['detail'] = $detailForm.elements[1].value;
     scheduleData['tags'] = $detailForm.elements[2].value;
-    // TODO: 获取上传的图片
-
     // 将数据插入到table中.
     insertScheduleRow(scheduleData);
     // 插入完成之后, 进行重置
@@ -21,6 +19,32 @@
     var $scheduleInclusionTagsInput = $('#schedule-inclusion-tags');
     scheduleData['tags'].split(',').forEach(function(tag) {
       $scheduleInclusionTagsInput.removeTag(tag);
+    });
+    // Dropzone需要额外处理
+    var $scheduleThumbnailContainer = $('#schedule-thumbnail-container');
+    $scheduleThumbnailContainer.empty();
+    $scheduleThumbnailContainer.append('<div id="schedule-thumbnail" class="dropzone" action="/uploads/package">');
+    $scheduleThumbnailContainer.find('#schedule-thumbnail').dropzone({
+      paramName: 'thumbnail',
+      method: 'POST',
+      maxFilesize: 5,
+      maxFiles: 1,
+      dictDefaultMessage: '拖拽或点击上传图片, 最多一张, 分辨率为560*460',
+      addRemoveLinks: true,
+      init: function() {
+        this.on('success', function (file, res) {
+          file._removeLink = res.delete_url;
+          file.url = res.url;
+        });
+        this.on('removedfile', function (file) {
+          $.ajax({
+            url: file._removeLink,
+            method: 'DELETE'
+          }).error(function(_, status, err) {
+            console.log(err);
+          });
+        });
+      }
     });
   }
 
@@ -42,7 +66,8 @@
     var scheduleTags = row.insertCell();
     scheduleTags.innerHTML = data['tags'];
     var scheduleThumbnail = row.insertCell();
-    scheduleThumbnail.innerHTML = '<img src="/dashboard/images/img.jpg">'
+    var scheduleThumbnailDropzone = Dropzone.forElement('div#schedule-thumbnail');
+    scheduleThumbnail.innerHTML = '<img src="' + scheduleThumbnailDropzone.files[0].url + '">';
     var scheduleView = row.insertCell();
     scheduleView.innerHTML = '<a href="#">View</a>';
     scheduleView.setAttribute('class', 'last');
@@ -88,7 +113,15 @@
     data['package_price'] = $basicForm.elements[1].value;
     data['package_abstract'] = $basicForm.elements[2].value;
     data['package_tags'] = $basicForm.elements[3].value;
-    // TODO: Package Thumbnail
+    // Package Thumbnail
+    var packageThumbnailsDropzone = Dropzone.forElement('div#package-thumbnails');
+    var packageThumbnails = packageThumbnailsDropzone.files;
+    var thumbnailsUrls = new Array();
+    packageThumbnails.forEach(function(file) {
+      thumbnailsUrls.push(file.url);
+    });
+    data['package_thumbnails'] = thumbnailsUrls;
+
     // 1.2 Schedule Detail
     var scheduleData = new Array();
     var $detailTable = $('#detail-table')[0];
@@ -101,8 +134,7 @@
       schedule['inclusion'] = $detail[3].innerHTML.split(',').map(function(str){
         return str.trim();
       });
-      // TODO: Package Schedule Thumbnail
-
+      schedule['thumbnail'] = $detail[4].getElementsByTagName('img')[0].getAttribute('src');
       scheduleData.push(schedule);
     }
     data['schedule'] = scheduleData;
@@ -160,5 +192,51 @@
     $('.buttonFinish').addClass('btn btn-default').on('click', onFinishButtonClicked);
     $('#schedule-save-btn').on('click', saveSchedule);
     $('#hotel-save-btn').on('click', saveHotel);
+    // Configure Dropzone.js Programmatically for package thumbnails
+    Dropzone.options.packageThumbnails = {
+      paramName: 'thumbnail',
+      method: 'POST',
+      maxFilesize: 5,
+      maxFiles: 3,
+      dictDefaultMessage: '拖拽或点击上传图片, 最多3张, 分辨率为1920*1080',
+      addRemoveLinks: true,
+      init: function() {
+        this.on('success', function(file, res) {
+          file._removeLink = res.delete_url;
+          file.url = res.url;
+        });
+        this.on('removedfile', function(file) {
+          $.ajax({
+            url: file._removeLink,
+            method: 'DELETE'
+          }).error(function(_, status, err) {
+            console.log(err);
+          });
+        })
+      }
+    };
+    // configure Dropzone.js Programmatically for schedule thumbnails
+    Dropzone.options.scheduleThumbnail = {
+      paramName: 'thumbnail',
+      method: 'POST',
+      maxFilesize: 5,
+      maxFiles: 1,
+      dictDefaultMessage: '拖拽或点击上传图片, 最多一张, 分辨率为560*460',
+      addRemoveLinks: true,
+      init: function() {
+        this.on('success', function (file, res) {
+          file._removeLink = res.delete_url;
+          file.url = res.url;
+        });
+        this.on('removedfile', function (file) {
+          $.ajax({
+            url: file._removeLink,
+            method: 'DELETE'
+          }).error(function(_, status, err) {
+            console.log(err);
+          });
+        });
+      }
+    };
   });
 }(jQuery));
