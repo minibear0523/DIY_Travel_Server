@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var Package = require('../models/package');
 
 router.get('/detail', function(req, res, next) {
   res.render('front/package/detail');
@@ -27,14 +28,20 @@ router.post('/package', function(req, res, next) {
   data['exclusion'] = req.body['exclusion'];
 
   console.log(data);
-  res.status(200).send(data);
 
-  // if (packageId) {
-  //   // update package
-  // } else {
-  //   // create new package
-  //
-  // }
+  if (packageId) {
+    // update package
+  } else {
+    // create new package
+    var package = new Package(data);
+    package
+      .save(function(package) {
+        res.status(201).send(package);
+      })
+      .catch(function(err) {
+        res.status(400).send(err);
+      });
+  }
 });
 
 module.exports = router;
