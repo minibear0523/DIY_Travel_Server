@@ -165,6 +165,19 @@
     data['exclusion'] = exclusionData;
     console.log(data);
     // Step2: Upload all data to server
+    var postUrl = '/packages/package';
+    $.ajax({
+      url: postUrl,
+      method: 'POST',
+      data: JSON.stringify(data),
+      contentType: 'application/json'
+    }).success(function(data, status, _) {
+        console.log(status);
+        console.log(data);
+      })
+      .error(function(_, status, err) {
+        console.log(err);
+      });
   }
 
   /**
