@@ -20,7 +20,7 @@
     scheduleData['tags'].split(',').forEach(function(tag) {
       $scheduleInclusionTagsInput.removeTag(tag);
     });
-    // Dropzone需要额外处理
+    // Dropzone需要额外处理, destory and re-create a new dropzone.
     var $scheduleThumbnailContainer = $('#schedule-thumbnail-container');
     $scheduleThumbnailContainer.empty();
     $scheduleThumbnailContainer.append('<div id="schedule-thumbnail" class="dropzone" action="/uploads/package">');
@@ -69,8 +69,15 @@
     var scheduleThumbnailDropzone = Dropzone.forElement('div#schedule-thumbnail');
     scheduleThumbnail.innerHTML = '<img src="' + scheduleThumbnailDropzone.files[0].url + '">';
     var scheduleView = row.insertCell();
-    scheduleView.innerHTML = '<a href="#">View</a>';
+    scheduleView.innerHTML = '<button onclick="viewBtnClicked(this);" class="btn btn-default" data-data="#schedule-' + $detailTable.rows.length + '">查看编辑</button>';
     scheduleView.setAttribute('class', 'last');
+  }
+
+  /**
+   * view button callback
+   */
+  function viewBtnClicked(btn) {
+    console.log(btn.data);
   }
 
   /**
@@ -110,9 +117,10 @@
     // 1.1 Basic Info Form
     var $basicForm = $('#basic-info-form')[0];
     data['package_title'] = $basicForm.elements[0].value;
-    data['package_price'] = $basicForm.elements[1].value;
-    data['package_abstract'] = $basicForm.elements[2].value;
-    data['package_tags'] = $basicForm.elements[3].value;
+    data['package_city'] = $basicForm.elements[1].value;
+    data['package_price'] = $basicForm.elements[3].value;
+    data['package_abstract'] = $basicForm.elements[4].value;
+    data['package_tags'] = $basicForm.elements[5].value;
     // Package Thumbnail
     var packageThumbnailsDropzone = Dropzone.forElement('div#package-thumbnails');
     var packageThumbnails = packageThumbnailsDropzone.files;

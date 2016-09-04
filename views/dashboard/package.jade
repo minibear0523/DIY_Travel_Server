@@ -56,6 +56,12 @@ block content
           .col-md-8.col-sm-8.col-xs-12
             input#package-title.form-control.col-md-7.col-xs-12(type='text', required='required', name='package-title')
         .form-group
+          label.control-label.col-md-3.col-sm-3.col-xs-12(for='package-city')
+            | 城市(天)
+            span.required *
+          .col-md-8.col-sm-8.col-xs-12
+            input#package-city.tags.form-control(type='text', name='package-city')
+        .form-group
           label.control-label.col-md-3.col-sm-3.col-xs-12(for='package-price')
             | 价格
             span.required *

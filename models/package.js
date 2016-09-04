@@ -19,16 +19,7 @@ var Package = new Schema({
     type: [String]
   },
   hotels: {
-    type: [String]
-  },
-  restaurants: {
-    type: [String]
-  },
-  attractions: {
-    type: [String]
-  },
-  flights: {
-    type: Schema.Types.Mixed
+    type: [Schema.Types.Mixed]
   },
   detail: {
     type: [Schema.Types.Mixed]
@@ -46,7 +37,8 @@ var Package = new Schema({
     type: [String]
   },
   pv: {
-    type: Number
+    type: Number,
+    default: 0
   }
 });
 
