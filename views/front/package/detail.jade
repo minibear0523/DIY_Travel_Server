@@ -4,7 +4,7 @@ block content
   // START: PAGE TITLE
   .rpw.page-title
     .container.clear-padding.text-center
-      h3 东京一地5日游
+      h3 #{ package.title }
       h4 6天/5晚
       span
         | 北京(0)
@@ -24,11 +24,11 @@ block content
             li(data-target='#gallery', data-slide-to='2')
           .carousel-inner(role='listbox')
             .item.active
-              img(src='/front/images/media/detail/DraggedImage-12.png', alt='SkyStarStudio')
+              img(src='#{package.thumbnails[0]}', alt='SkyStarStudio')
             .item
-              img(src='/front/images/media/detail/DraggedImage-2.png', alt='SkyStarStudio')
+              img(src='#{package.thumbnails[1]}', alt='SkyStarStudio')
             .item
-              img(src='/front/images/media/detail/DraggedImage-23.png', alt='SkyStarStudio')
+              img(src='#{package.thumbnails[2]}', alt='SkyStarStudio')
           a.left.carousel-control(href='#gallery', role='button', data-slide='prev')
             span.fa.fa-chevron-left(aria-hidden='true')
             span.sr-only 上一页
@@ -57,7 +57,7 @@ block content
             #overview.tab-pane.fade
               h4.tab-heading 概述
               p
-                | 这条东京一地的线路是我们专为一对情侣设计的，分别安排了女生喜欢住在有当地特色的酒店及男生喜欢住在现代及方便的酒店, 女生喜欢当地的文化,品尝特色各种美食, 我们更精心为她们安排了一堂做寿司的课. 男生喜欢摄影, 喜欢逛摄影器材, 喜欢动漫, 我们也特意为她们安排了曾经张千里所推荐的新宿二手摄影器材店.这6天的行程安排了明治神宫, 浅草寺等景点来感受日本的历史文化, 也安排了涩谷, 银座, 台场, 秋叶原等景点, 体验东京的繁华.
+                | #{package.abstract}
               h4.tab-heading 费用包含
               p.inc
                 i.fa.fa-check-square
@@ -139,86 +139,46 @@ block content
                     br
             #itinerary.tab-pane.fade.in.active
               h4.tab-heading 旅行线路
-              .daily-schedule
-                .title
-                  p
-                    span 第一天
-                    | 抵达东京
-                .daily-schedule-body
-                  .col-md-4.col-sm-4
-                    img(src='/front/images/media/detail/DraggedImage.png')
-                  .col-md-8.col-sm-8
-                    p
-                      | 从北京乘坐上午的航班, 经过大约4小时的飞行之后, 我们下午就会到达日本首府 ——东京, 先到酒店CheckIn, 放好行李, 随后前往森美术馆参观后来到52层的观景台, 如果天气条件允许的话, 还有机会可以上屋顶的露天观景台俯瞰东京的城市夜景. 不仅如此, 还可在这层的Mado Lounge点杯小酒, 享受这惬意的氛围.随后回酒店, 好好休息!
-                  .clearfix
-                  .col-md-12.activity
-                    h4 包括:
-                    .col-md-6.col-sm-6
-                      p
-                        i.fa.fa-check-square
-                        |  森美术馆
-                    .col-md-6.col-sm-6
-                      p
-                        i.fa.fa-check-square
-                        |  东京夜景
-                    .clearfix
+              - for (var i = 0; i < package.detail.length; i++)
+                - var schedule = package.detail[i]
                 .daily-schedule
                   .title
                     p
-                      span 第二天
-                      | 上野 - 涩谷 - 原宿 - 新宿
+                      span #{schedule.day}
+                      | #{schedule.title}
                   .daily-schedule-body
                     .col-md-4.col-sm-4
-                      img(src='/front/images/media/detail/Meiji-jing.png')
+                      img(src='#{schedule.thumbnail}')
                     .col-md-8.col-sm-8
                       p
-                        | 早餐后前往著名的涩谷109大厦, 涩谷车站前巨大的十字路口因为其汹涌的人潮以及各种巨幅广告和电子屏幕而被誉为世界上最著名的十字路口. 而同样位于涩谷地区的代官山则是各类咖啡馆、时装店和杂货店等时髦商店的聚集地. 跟随电影<<忠犬八公的故事>>来到八公广场,找到 八公像 , 与它合个影吧! 之后来到 原宿(Harajuku), 到咱们的打卡景点 明治神宫 游览, 随后逛逛原宿最热门地区竹下通. 这是从原宿站竹下口对面的竹下街到明治大街区域的一条商店街，在这一条街上汇集了各式各样的服装、餐饮、杂货店等，是日本的学生们最喜欢逛的地方. 在这里, 你能看到那些哥特—萝莉装扮的女孩们哦(想象一下僵尸小波碧, zombie Little Bo Peep)! 接着在表参道欣赏夺人眼球的当代建筑, 这里是高档设计时装及一线品牌服装店的聚集地. 在这里你可以找到像川久保玲、ISSEY MIYAKE等日本本地和一些欧洲顶级设计师的作品. 也可以在逛原宿的时候顺道去表参道随意逛逛，感受一下东京的高端时尚气息. 之后到新宿的MapCamera —— MapCamera是近年來相当红火的中古相机店，位于新宿西口的热闹地段，虽然店面并不显眼，附近还被カメラのキタムラ和Yodobashi Camera包围. 但MapCamera的特色是国內外各式相机货色一应俱全，并且完全以精品店的方式呈现，即便贩卖的多是二手相机(它们也有卖新相机)也不能影响它的火热，最重要的是客人只需要带着护照, 就可以免税。晚上在新宿看霓虹灯, 再到金街的某个酒吧里畅饮.
+                        | #{schedule.detail}
                     .clearfix
                     .col-md-12.activity
                       h4 包括:
-                      .col-md-6.col-sm-6
-                        p
-                          i.fa.fa-check-square
-                          |  明治神宫
-                      .col-md-6.col-sm-6
-                        p
-                          i.fa.fa-check-square
-                          |  涩谷十字路口
+                      - for (var i = 0; i < schedule.inclusion.length; i++)
+                        - var tag = schedule.inclusion[i]
+                        .col-md-6.col-sm-6
+                          p
+                            i.fa.fa-check-square
+                            |  #{tag}
+                      -
                       .clearfix
-                      .col-md-6.col-sm-6
-                        p
-                          i.fa.fa-check-square
-                          |  八公像
-                      .col-md-6.col-sm-6
-                        p
-                          i.fa.fa-check-square
-                          |  竹下通
-                      .clearfix
-                      .col-md-6.col-sm-6
-                        p
-                          i.fa.fa-check-square
-                          |  表参道
-                      .col-md-6.col-sm-6
-                        p
-                          i.fa.fa-check-square
-                          |  新宿
-                      .clearfix
+              -
             #add-info.tab-pane.fade
               h4.tab-heading 包含
               p.inc
-                i.fa.fa-check-circle
-                |  保险
-                br
-                i.fa.fa-check-circle
-                |  随身WIFI
+                - for (var i = 0; i < package.inclusion.length; i++)
+                  - var tag = package.inclusion[i]
+                  i.fa.fa-check-circle
+                  |  #{tag}
+                  br
               h4.tab-heading 不包含
               p.inc
-                i.fa.fa-times-circle
-                |  小费
-                br
-                i.fa.fa-times-circle
-                |  餐费
-                br
+                - for (var i = 0; i < package.exclusion.length; i++)
+                  - var tag = package.exclusion[i]
+                  i.fa.fa-times-circle
+                  |  #{tag}
+                  br
       .col-md-4.package-detail-sidebar
         .col-md-12.sidebar-wrapper.clear-padding
           .package-summary.sidebar-item
@@ -241,7 +201,7 @@ block content
             .package-summary-footer.text-center
               .col-md-6.col-sm-6.col-xs-6.price
                 h5 基础起步价
-                h5 8000元/人
+                h5 #{package.price}元/人
               .col-md-6.col-sm-6.col-xs-6.book
                 a(href='#') 立即预定
           .sidebar-booking-box

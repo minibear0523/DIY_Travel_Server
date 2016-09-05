@@ -2,8 +2,26 @@ var express = require('express');
 var router = express.Router();
 var Package = require('../models/package');
 
-router.get('/detail', function(req, res, next) {
-  res.render('front/package/detail');
+/**
+ * render package detail page
+ */
+router.get('/detail/:id', function(req, res, next) {
+  var packageId = req.params.id || "";
+  console.log(packageId);
+  if (packageId) {
+    Package
+      .findById(packageId)
+      .exec()
+      .then(function (package) {
+        console.log(package.detail[1]);
+        res.render('front/package/detail', {package: package});
+      })
+      .catch(function(err) {
+        res.status(404);
+      })
+  } else {
+    res.status(404);
+  }
 });
 
 /**
@@ -26,8 +44,6 @@ router.post('/package', function(req, res, next) {
   data['detail'] = req.body['schedule'];
   data['inclusion'] = req.body['inclusion'];
   data['exclusion'] = req.body['exclusion'];
-
-  console.log(data);
 
   if (packageId) {
     // update package
