@@ -163,7 +163,6 @@
     var exclusionData = $inclusionExclusionForm.elements[2].value.split(',').map(function(str) {return str.trim();});
     data['inclusion'] = inclusionData;
     data['exclusion'] = exclusionData;
-    console.log(data);
     // Step2: Upload all data to server
     var postUrl = '/packages/package';
     $.ajax({
@@ -172,8 +171,10 @@
       data: JSON.stringify(data),
       contentType: 'application/json'
     }).success(function(data, status, _) {
-        console.log(status);
-        console.log(data);
+        if (status == 'success') {
+          var packageId = data;
+          location.href = '/packages/package/' + data;
+        }
       })
       .error(function(_, status, err) {
         console.log(err);

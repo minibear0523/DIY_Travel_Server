@@ -60,16 +60,16 @@ block content
                 | #{package.abstract}
               h4.tab-heading 费用包含
               p.inc
-                i.fa.fa-check-square
-                | 往返机票
-                br
-                i.fa.fa-check-square
-                | 酒店住宿
-                br
+                - each tag in package.inclusion
+                  i.fa.fa-check-square
+                  |  #{tag}
+                  br
               h4.tab-heading 费用不包含
               p.inc
-                i.fa.fa-times-circle-o
-                |  签证费用
+                - each tag in package.exclusion
+                  i.fa.fa-times-circle-o
+                  |  #{tag}
+                  br
             #inclusion.tab-pane.fade
               h4.tab-heading 包含内容
               .inclusion-wrapper
@@ -79,68 +79,61 @@ block content
                       i.fa.fa-bed
                     | 酒店
                 .inclusion-body
-                  h4 东京3晚
-                  .col-md-3.col-sm-3.clear-padding
-                    img(src='/front/images/media/detail/TheEdoSakura.png', alt='江户樱花饭店')
-                  .col-md-9.col-sm-9
-                    h5 江户樱花饭店 The Edo Sakura
-                    p 出门步行5分钟就可以达到地铁入谷站, 出行十分方便. 房间很新, 非常有日式风情, 而且干净整洁, 周围环境很安静.
-                  .clearfix
-                  h4 东京2晚
-                  .col-md-3.col-sm-3.clear-padding
-                    img(src='/front/images/media/detail/MillenniumMitsuiGarden.png', alt='东京千禧三井花园饭店')
-                  .col-md-9.col-sm-9
-                    h5 东京千禧三井花园饭店 Millennium Mitsui Garden Hotel Tokyo
-                    p 酒店的位置超方便，是购物狂们的最爱，就位于三越百货对面，步行可以到达银座和筑地市场。购物完了可以把战利品放在房间里再出去用餐，很方便。
-                  .clearfix
-              .inclusion-wrapper
-                .inclusion-title
-                  p
-                    span
-                      i.fa.fa-plane
-                    | 交通
-                .inclusion-body
-                  h4 往返航班
-                  .flight-inclusion
-                    .col-md-2.col-sm-2.col-xs-2.text-center
-                      img(src='/front/images/airline/airline.jpg', alt='')
-                    .col-md-3.col-sm-3.col-xs-3.text-center
+                  - each hotel in package.hotels
+                    h4 #{hotel.duration}晚
+                    .col-md-3.col-sm-3.clear-padding
+                      img(src='/front/images/media/detail/TheEdoSakura.png', alt='#{hotel.name}')
+                    .col-md-9.col-sm-9
+                      h5 #{hotel.name}
+                      p 出门步行5分钟就可以达到地铁入谷站, 出行十分方便. 房间很新, 非常有日式风情, 而且干净整洁, 周围环境很安静.
+                    .clearfix
+              //.inclusion-wrapper
+              //  .inclusion-title
+              //    p
+              //      span
+              //        i.fa.fa-plane
+              //      | 交通
+              //  .inclusion-body
+              //    h4 往返航班
+              //    .flight-inclusion
+              //      .col-md-2.col-sm-2.col-xs-2.text-center
+              //        img(src='/front/images/airline/airline.jpg', alt='')
+              //      .col-md-3.col-sm-3.col-xs-3.text-center
+              //        p 北京国际机场
+              //      .col-md-4.col-sm-4.col-sm-4.text-center
+              //        i.fa.fa-long-arrow-right
+              //      .col-md-3.col-sm-3.col-xs-3.text-center
+              //        p 东京羽田机场
+              //    .clearfix
+              //    .flight-inclusion
+              //      .col-md-2.col-sm-2.col-xs-2.text-center
+              //        img(src='/front/images/airline/airline.jpg', alt='')
+              //      .col-md-3.col-sm-3.col-xs-3.text-center
+              //        p 东京羽田机场
+              //      .col-md-4.col-sm-4.col-xs-4.text-center
+              //        i.fa.fa-long-arrow-right
+              //      .col-md-3.col-sm-3.col-xs-3.text-center
                       p 北京国际机场
-                    .col-md-4.col-sm-4.col-sm-4.text-center
-                      i.fa.fa-long-arrow-right
-                    .col-md-3.col-sm-3.col-xs-3.text-center
-                      p 东京羽田机场
-                  .clearfix
-                  .flight-inclusion
-                    .col-md-2.col-sm-2.col-xs-2.text-center
-                      img(src='/front/images/airline/airline.jpg', alt='')
-                    .col-md-3.col-sm-3.col-xs-3.text-center
-                      p 东京羽田机场
-                    .col-md-4.col-sm-4.col-xs-4.text-center
-                      i.fa.fa-long-arrow-right
-                    .col-md-3.col-sm-3.col-xs-3.text-center
-                      p 北京国际机场
-              .inclusion-wrapper
-                .inclusion-title
-                  p
-                    span
-                      i.fa.fa-suitcase
-                    | 其他包含内容
-                .inclusion-body
-                  p.inc
-                    i.fa.fa-check-circle
-                    |  保险
-                    br
-                    i.fa.fa-check-circle
-                    |  随身WIFI
-                    br
-                    i.fa.fa-check-circle
-                    |  路书
-                    br
+              //.inclusion-wrapper
+              //  .inclusion-title
+              //    p
+              //      span
+              //        i.fa.fa-suitcase
+              //      | 其他包含内容
+              //  .inclusion-body
+              //    p.inc
+              //      i.fa.fa-check-circle
+              //      |  保险
+              //      br
+              //      i.fa.fa-check-circle
+              //      |  随身WIFI
+              //      br
+              //      i.fa.fa-check-circle
+              //      |  路书
+              //      br
             #itinerary.tab-pane.fade.in.active
               h4.tab-heading 旅行线路
-              - for (var i = 0; i < package.detail.length; i++)
-                - var schedule = package.detail[i]
+              - each schedule in package.detail
                 .daily-schedule
                   .title
                     p
@@ -155,8 +148,7 @@ block content
                     .clearfix
                     .col-md-12.activity
                       h4 包括:
-                      - for (var i = 0; i < schedule.inclusion.length; i++)
-                        - var tag = schedule.inclusion[i]
+                      - each tag in schedule.inclusion
                         .col-md-6.col-sm-6
                           p
                             i.fa.fa-check-square
@@ -167,17 +159,15 @@ block content
             #add-info.tab-pane.fade
               h4.tab-heading 包含
               p.inc
-                - for (var i = 0; i < package.inclusion.length; i++)
-                  - var tag = package.inclusion[i]
+                - each tag in package.inclusion
                   i.fa.fa-check-circle
                   |  #{tag}
                   br
               h4.tab-heading 不包含
               p.inc
-                - for (var i = 0; i < package.exclusion.length; i++)
-                  - var tag = package.exclusion[i]
+                - each tag in package.exclusion
                   i.fa.fa-times-circle
-                  |  #{tag}
+                  |  #{tag} &nbsp;
                   br
       .col-md-4.package-detail-sidebar
         .col-md-12.sidebar-wrapper.clear-padding
@@ -189,15 +179,17 @@ block content
               h5
                 i.fa.fa-heart
                 |  主题
-              p 情侣, 文化, 美食, 摄影
+              p
+                - each tag in package.tags
+                  | #{tag + ' '}
               h5
                 i.fa.fa-map-marker
                 |  出发地
-              p 北京
+              p #{package.city[0]}
               h5
                 i.fa.fa-globe
                 |  途经&目的地
-              p 东京
+              p #{package.city[1]}
             .package-summary-footer.text-center
               .col-md-6.col-sm-6.col-xs-6.price
                 h5 基础起步价
