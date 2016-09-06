@@ -1,27 +1,34 @@
 @charset "UTF-8";
 .td_date {
-  width: 80px;
+  width: 5%;
 }
 
 .td_title {
-  width: 150px;
+  width: 15%;
 }
 
 .td_detail {
-  width: 400px;
+  width: 35%;
 }
 
 .td_attraction {
-  width: 150px;
+  width: 10%;
+}
+
+.td_restaurant {
+  width: 10%;
+}
+
+.td_thumbnail {
+  width: 20%;
 }
 
 .schedule_thumbnail {
-  width: 140px;
-  height: 115px;
+  width: 100%
 }
 
 .td_action {
-  width: 40px;
+  width: 5%;
 }
 
 .view-btn {

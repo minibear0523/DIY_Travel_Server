@@ -7,7 +7,11 @@ var Package = new Schema({
     type: String,
     required: true
   },
-  city: {
+  duration: {
+    type: String,
+    required: true
+  },
+  department: {
     type: String,
     required: true
   },

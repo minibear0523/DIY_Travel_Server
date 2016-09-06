@@ -7,18 +7,23 @@
   function saveSchedule(e) {
     e.preventDefault();
     var $detailForm = $('#detail-form')[0];
+    var $detailTable = $('#detail-table')[0];
     var scheduleData = new Object();
-    scheduleData['title'] = $detailForm.elements[0].value;
-    scheduleData['detail'] = $detailForm.elements[1].value;
-    scheduleData['tags'] = $detailForm.elements[2].value;
+    scheduleData['date'] = $detailForm.elements[0].value || $detailTable.rows.length;
+    scheduleData['title'] = $detailForm.elements[1].value;
+    scheduleData['detail'] = $detailForm.elements[2].value;
+    scheduleData['attractions'] = $detailForm.elements[3].value;
+    scheduleData['restaurants'] = $detailForm.elements[5].value;
     // 将数据插入到table中.
     insertScheduleRow(scheduleData);
     // 插入完成之后, 进行重置
     $detailForm.reset();
     // tagsInput需要额外处理
     var $scheduleInclusionTagsInput = $('#schedule-inclusion-tags');
-    scheduleData['tags'].split(',').forEach(function(tag) {
+    scheduleData['attractions'].split(',').forEach(function(tag) {
       $scheduleInclusionTagsInput.removeTag(tag);
+    });
+    scheduleData['restaurants'].split(',').forEach(function(restaurant) {
     });
     // Dropzone需要额外处理, destory and re-create a new dropzone.
     var $scheduleThumbnailContainer = $('#schedule-thumbnail-container');
@@ -55,19 +60,22 @@
   function insertScheduleRow(data) {
     var $detailTable = $('#detail-table')[0];
     var $detailTableBody = $detailTable.getElementsByTagName('tbody')[0];
-    var days = "第" + $detailTable.rows.length + "天";
+    var days = "第" + data['date'] + "天";
     var row = $detailTableBody.insertRow();
     var scheduleDay = row.insertCell();
     scheduleDay.innerHTML = days;
     scheduleDay.setAttribute('class', 'td_date');
     var scheduleTitle = row.insertCell();
     scheduleTitle.innerHTML = data['title'];
+    scheduleTitle.setAttribute('class', 'td_title');
     var scheduleDetail = row.insertCell();
     scheduleDetail.innerHTML = data['detail'];
     scheduleDetail.setAttribute('class', 'td_detail');
-    var scheduleTags = row.insertCell();
-    scheduleTags.innerHTML = data['tags'];
-    scheduleTags.setAttribute('class', 'td_attraction');
+    var scheduleAttractions = row.insertCell();
+    scheduleAttractions.innerHTML = data['attractions'];
+    scheduleAttractions.setAttribute('class', 'td_attraction');
+    var scheduleRestaurants = row.insertCell();
+    scheduleRestaurants.innerHTML = data['restaurants'];
     var scheduleThumbnail = row.insertCell();
     var scheduleThumbnailDropzone = Dropzone.forElement('div#schedule-thumbnail');
     scheduleThumbnail.innerHTML = '<img class="schedule_thumbnail" src="' + scheduleThumbnailDropzone.files[0].url + '">';
@@ -75,7 +83,7 @@
     var viewBtnNode = document.createElement('button');
     viewBtnNode.setAttribute('class', 'btn btn-default view-btn');
     viewBtnNode.setAttribute('data-data', '#schedule-' + ($detailTable.rows.length - 1));
-    viewBtnNode.innerHTML = '查看编辑';
+    viewBtnNode.innerHTML = '编辑';
     viewBtnNode.addEventListener('click', viewBtnClicked);
     scheduleView.setAttribute('class', 'last td_action');
     scheduleView.appendChild(viewBtnNode);
@@ -102,6 +110,8 @@
     data['detail'] = detail[2].innerHTML;
     data['tags'] = detail[3].innerHTML;
     data['thumbnails'] = detail[4].innerHTML;
+    data['restaurants'] = detail[5].innerHTML;
+    insertDataToForm(data);
   }
 
   /**
@@ -148,10 +158,12 @@
     // 1.1 Basic Info Form
     var $basicForm = $('#basic-info-form')[0];
     data['package_title'] = $basicForm.elements[0].value;
-    data['package_city'] = $basicForm.elements[1].value;
-    data['package_price'] = $basicForm.elements[3].value;
-    data['package_abstract'] = $basicForm.elements[4].value;
-    data['package_tags'] = $basicForm.elements[5].value;
+    data['package_duration'] = $basicForm.elements[1].value;
+    data['package_department'] = $basicForm.elements[2].value;
+    data['package_destination'] = $basicForm.elements[3].value;
+    data['package_price'] = $basicForm.elements[5].value;
+    data['package_abstract'] = $basicForm.elements[6].value;
+    data['package_tags'] = $basicForm.elements[7].value;
     // Package Thumbnail
     var packageThumbnailsDropzone = Dropzone.forElement('div#package-thumbnails');
     var packageThumbnails = packageThumbnailsDropzone.files;
@@ -220,12 +232,25 @@
   }
 
   $(function () {
+    $('#package-destination').tagsInput({
+      width: 'auto',
+      defaultText: '城市(天数)'
+    });
     $('#package-tags').tagsInput({
-      width: 'auto'
+      width: 'auto',
+      defaultText: '线路标签'
     });
-    $('.tags').tagsInput({
-      'width': 'auto'
+    $('#schedule-inclusion-tags').tagsInput({
+      width: 'auto',
+      defaultText: '景点名称'
     });
+    $('#schedule-restaurants').tagsInput({
+      width: 'auto',
+      defaultText: '当日推荐'
+    });
+    // $('.tags').tagsInput({
+    //   'width': 'auto'
+    // });
     var formWizard = $('#wizard');
     formWizard.smartWizard();
     formWizard.find('.stepContainer').css('height', 'auto');

@@ -57,11 +57,17 @@ block content
           .col-md-8.col-sm-8.col-xs-12
             input#package-title.form-control.col-md-7.col-xs-12(type='text', required='required', name='package-title')
         .form-group
-          label.control-label.col-md-3.col-sm-3.col-xs-12(for='package-city')
+          label.control-label.col-md-3.col-sm-3.col-xs-12(for='package-duration')
+            | 天数
+            span.required *
+          .col-md-8.col-sm-8.col-xs-12
+            input#package-duration.form-control.col-md-7.col-xs-12(type='text', name='package-duration', placeholder='例如: 5天')
+        .form-group
+          label.control-label.col-md-3.col-sm-3.col-xs-12(for='package-department')
             | 出发城市
             span.required *
           .col-md-8.col-sm-8.col-xs-12
-            input#package-city.form-control(type='text', name='package-city')
+            input#package-department.form-control(type='text', name='package-department', placeholder='例如: 北京')
         .form-group
           label.control-label.col-md-3.col-sm-3.col-xs-12(for='package-destination')
             | 途经城市 & 目的地
@@ -93,14 +99,15 @@ block content
             #package-thumbnails.dropzone(action='/uploads/package')
     #step-2
       .row
-        .col-xs-10.col-xs-offset-1.table-responsive
+        .col-xs-12.table-responsive
           table#detail-table.table.table-striped.jambo_table
             thead
               tr.headings
                 th.column-title.a-center 日期
                 th.column-title.a-center 标题
                 th.column-title.a-center 详情
-                th.column-title.a-center 包含
+                th.column-title.a-center 包含景点
+                th.column-title.a-center 推荐餐厅
                 th.column-title.a-center 缩略图
                 th.column-title.no-links.last
                   span.nobr Action
@@ -109,20 +116,32 @@ block content
         .col-xs-12
           form#detail-form.form-horizontal.form-label-left.input-mask
             .form-group
+              label.control-label.col-md-3.col-sm-3.col-xs-12(for='schedule-date')
+                | 日期(可选)
+              .col-md-8.col-sm-8.col-xs-12
+                input#schedule-date.form-control(type='text', name='schedule-date', placeholder='例如第三天输入:3, 不输入则按照当前已经添加的天数自动增加.')
+            .form-group
               label.control-label.col-md-3.col-sm-3.col-xs-12(for='schedule-title')
                 | 标题
+                span.required *
               .col-md-8.col-sm-8.col-xs-12
                 input#schedule-title.form-control(type='text', name='schedule-title')
             .form-group
               label.control-label.col-md-3.col-sm-3.col-xs-12(for='schedule-detail')
                 | 详情
+                span.required *
               .col-md-8.col-sm-8.col-xs-12
                 textarea#schedule-detail.form-control(rows='4', name='schedule-detail', data-parsley-trigger='keyup', data-parsley-minlength='60', data-parsley-maxlength='400')
             .form-group
               label.control-label.col-md-3.col-sm-3.col-xs-12(for='schedule-tags')
-                | 包含
+                | 包含景点
               .col-md-8.col-sm-8.col-xs-12
-                input#schedule-inclusion-tags.tags.form-control(type='text', data-role="tagsinput")
+                input#schedule-inclusion-tags.tags.form-control(type='text')
+            .form-group
+              label.control-label.col-md-3.col-sm-3.col-xs-12(for='schedule-restaurants')
+                | 推荐餐厅
+              .col-md-8.col-sm-8.col-xs-12
+                input#schedule-restaurants.tags.form-control(type='text', name='schedule-restaurants')
             .form-group
               label.control-label.col-md-3.col-sm-3.col-xs-12(for='schedule-thumbnails')
                 | 缩略图
