@@ -8,6 +8,10 @@ var Package = new Schema({
     required: true
   },
   city: {
+    type: String,
+    required: true
+  },
+  destination: {
     type: [String],
     required: true
   },

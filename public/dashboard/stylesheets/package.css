@@ -1,0 +1,29 @@
+@charset "UTF-8";
+.td_date {
+  width: 80px;
+}
+
+.td_title {
+  width: 150px;
+}
+
+.td_detail {
+  width: 400px;
+}
+
+.td_attraction {
+  width: 150px;
+}
+
+.schedule_thumbnail {
+  width: 140px;
+  height: 115px;
+}
+
+.td_action {
+  width: 40px;
+}
+
+.view-btn {
+
+}

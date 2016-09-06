@@ -59,25 +59,56 @@
     var row = $detailTableBody.insertRow();
     var scheduleDay = row.insertCell();
     scheduleDay.innerHTML = days;
+    scheduleDay.setAttribute('class', 'td_date');
     var scheduleTitle = row.insertCell();
     scheduleTitle.innerHTML = data['title'];
     var scheduleDetail = row.insertCell();
     scheduleDetail.innerHTML = data['detail'];
+    scheduleDetail.setAttribute('class', 'td_detail');
     var scheduleTags = row.insertCell();
     scheduleTags.innerHTML = data['tags'];
+    scheduleTags.setAttribute('class', 'td_attraction');
     var scheduleThumbnail = row.insertCell();
     var scheduleThumbnailDropzone = Dropzone.forElement('div#schedule-thumbnail');
-    scheduleThumbnail.innerHTML = '<img src="' + scheduleThumbnailDropzone.files[0].url + '">';
+    scheduleThumbnail.innerHTML = '<img class="schedule_thumbnail" src="' + scheduleThumbnailDropzone.files[0].url + '">';
     var scheduleView = row.insertCell();
-    scheduleView.innerHTML = '<button onclick="viewBtnClicked(this);" class="btn btn-default" data-data="#schedule-' + $detailTable.rows.length + '">查看编辑</button>';
-    scheduleView.setAttribute('class', 'last');
+    var viewBtnNode = document.createElement('button');
+    viewBtnNode.setAttribute('class', 'btn btn-default view-btn');
+    viewBtnNode.setAttribute('data-data', '#schedule-' + ($detailTable.rows.length - 1));
+    viewBtnNode.innerHTML = '查看编辑';
+    viewBtnNode.addEventListener('click', viewBtnClicked);
+    scheduleView.setAttribute('class', 'last td_action');
+    scheduleView.appendChild(viewBtnNode);
   }
 
   /**
    * view button callback
    */
-  function viewBtnClicked(btn) {
-    console.log(btn.data);
+  function viewBtnClicked(e) {
+    e.preventDefault();
+    var dataHref = e.target.dataset['data'];
+    var scheduleRankReg = /#schedule-(\d+)/;
+    var rank = undefined;
+    if (scheduleRankReg.test(dataHref)) {
+      rank = Number.parseInt(scheduleRankReg.exec(dataHref)[1]);
+    } else {
+      rank = -1
+      return;
+    }
+    var data = new Object();
+    var $detailTable = $('#detail-table')[0];
+    var detail = $detailTable.rows[rank].cells;
+    data['title'] = detail[1].innerHTML;
+    data['detail'] = detail[2].innerHTML;
+    data['tags'] = detail[3].innerHTML;
+    data['thumbnails'] = detail[4].innerHTML;
+  }
+
+  /**
+   *
+   */
+  function insertDataToForm(data) {
+
   }
 
   /**

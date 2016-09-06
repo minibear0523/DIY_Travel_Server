@@ -14,6 +14,7 @@ block css-external
   link(href='/dashboard/vendors/dropzone/dist/min/dropzone.min.css', rel='stylesheet')
   // iCheck
   link(href='/dashboard/vendors/iCheck/skins/flat/green.css', rel='stylesheet')
+  link(href='/dashboard/stylesheets/package.css', rel='stylesheet')
 
 block content
   p 添加或修改旅行线路
@@ -57,10 +58,16 @@ block content
             input#package-title.form-control.col-md-7.col-xs-12(type='text', required='required', name='package-title')
         .form-group
           label.control-label.col-md-3.col-sm-3.col-xs-12(for='package-city')
-            | 城市(天)
+            | 出发城市
             span.required *
           .col-md-8.col-sm-8.col-xs-12
-            input#package-city.tags.form-control(type='text', name='package-city')
+            input#package-city.form-control(type='text', name='package-city')
+        .form-group
+          label.control-label.col-md-3.col-sm-3.col-xs-12(for='package-destination')
+            | 途经城市 & 目的地
+            span.required *
+          .col-md-8.col-sm-8.col-xs-12
+            input#package-destination.tags.form-control(type='text', name='package-destination')
         .form-group
           label.control-label.col-md-3.col-sm-3.col-xs-12(for='package-price')
             | 价格
@@ -70,7 +77,7 @@ block content
             span.form-control-feedback.right 元/人
         .form-group
           label.control-label.col-md-3.col-sm-3.col-xs-12(for='package-abstract')
-            | 概述
+            | 设计思路
             span.required *
           .col-md-8.col-sm-8.col-xs-12
             textarea#package-abstract.form-control.col-md-12.col-xs-12(name='package-abstract', data-parsley-trigger='keyup', data-parsley-minlength='20', data-parsley-max-length='200', rows='5')
