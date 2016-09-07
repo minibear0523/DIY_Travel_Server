@@ -16,14 +16,45 @@
     scheduleData['restaurants'] = $detailForm.elements[5].value;
     // 将数据插入到table中.
     insertScheduleRow(scheduleData);
+    resetScheduleForm(e);
+  }
+
+  /**
+   * 更新单日行程
+   */
+  function updateSchedule(e) {
+    e.preventDefault();
+    var $detailForm = $('#detail-form')[0];
+    var $detailTable = $('#detail-table')[0];
+    var scheduleData = new Object();
+    scheduleData['date'] = $detailForm.elements[0].value;
+    scheduleData['title'] = $detailForm.elements[1].value;
+    scheduleData['detail'] = $detailForm.elements[2].value;
+    scheduleData['attractions'] = $detailForm.elements[3].value;
+    scheduleData['restaurants'] = $detailForm.elements[5].value;
+    insertScheduleRow(scheduleData);
+    resetScheduleForm(e);
+  }
+
+  /**
+   * 重置单日行程的表单
+   * @param e
+   */
+  function resetScheduleForm(e) {
+    if (e) {
+      e.preventDefault();
+    }
+    var $detailForm = $('#detail-form')[0];
     // 插入完成之后, 进行重置
     $detailForm.reset();
     // tagsInput需要额外处理
-    var $scheduleInclusionTagsInput = $('#schedule-inclusion-tags');
-    scheduleData['attractions'].split(',').forEach(function(tag) {
-      $scheduleInclusionTagsInput.removeTag(tag);
+    var $scheduleAttractions = $('#schedule-attractions');
+    $detailForm.elements[3].value.split(',').forEach(function(tag) {
+      $scheduleAttractions.removeTag(tag);
     });
-    scheduleData['restaurants'].split(',').forEach(function(restaurant) {
+    var $scheduleRestaurants = $('#schedule-restaurants');
+    $detailForm.elements[5].value.split(',').forEach(function(restaurant) {
+      $scheduleRestaurants.removeTag(restaurant);
     });
     // Dropzone需要额外处理, destory and re-create a new dropzone.
     var $scheduleThumbnailContainer = $('#schedule-thumbnail-container');
@@ -54,14 +85,24 @@
   }
 
   /**
-   * 插入数据到table中
+   * 删除单日行程
+   */
+  function deleteScheduleRow(location) {
+    var $detailTable = $('#detail-table')[0];
+    var $detailTableBody = $detailTable.getElementsByTagName('tbody')[0];
+    $detailTableBody.deleteRow(location);
+  }
+
+  /**
+   * 插入数据到table中, 其中插入的location就是date-1, 例如第一天就在第一行, insertRow(0), 第二天就在第二行, insertRow(1)
    * @param data: title, detail, image_url, tags
    */
   function insertScheduleRow(data) {
     var $detailTable = $('#detail-table')[0];
     var $detailTableBody = $detailTable.getElementsByTagName('tbody')[0];
     var days = "第" + data['date'] + "天";
-    var row = $detailTableBody.insertRow();
+    // 进行插入位置的判断
+    var row = $detailTableBody.insertRow(data['date']-1);
     var scheduleDay = row.insertCell();
     scheduleDay.innerHTML = days;
     scheduleDay.setAttribute('class', 'td_date');
@@ -100,25 +141,57 @@
     if (scheduleRankReg.test(dataHref)) {
       rank = Number.parseInt(scheduleRankReg.exec(dataHref)[1]);
     } else {
-      rank = -1
+      rank = -1;
       return;
     }
     var data = new Object();
     var $detailTable = $('#detail-table')[0];
     var detail = $detailTable.rows[rank].cells;
+    data['date'] = detail[0].innerHTML;
     data['title'] = detail[1].innerHTML;
     data['detail'] = detail[2].innerHTML;
-    data['tags'] = detail[3].innerHTML;
-    data['thumbnails'] = detail[4].innerHTML;
-    data['restaurants'] = detail[5].innerHTML;
-    insertDataToForm(data);
+    data['attractions'] = detail[3].innerHTML;
+    data['restaurants'] = detail[4].innerHTML;
+    data['thumbnails'] = detail[5].innerHTML;
+    insertDataToForm(data, rank);
+    // 将表单状态修改为只能更新
+    changeScheduleFormDisabledStatus(false, rank);
   }
 
   /**
-   *
+   * 修改行程表单的状态
+   * @param status: 状态, true为保存, false为只能修改
    */
-  function insertDataToForm(data) {
+  function changeScheduleFormDisabledStatus (status, location) {
+    if (status) {
+      $('#schedule-update-btn').attr('disabled', 'true');
+      $('#schedule-cancel-btn').attr('disabled', 'true');
+      $('#schedule-delete-btn').attr('disabled', 'true');
+      $('#schedule-save-btn').removeAttr('disabled');
+    } else {
+      $('#schedule-update-btn').removeAttr('disabled');
+      $('#schedule-cancel-btn').removeAttr('disabled');
+      $('#schedule-delete-btn').removeAttr('disabled');
+      $('#schedule-save-btn').attr('disabled', 'true');
+    }
+  }
 
+  /**
+   * 将已有数据插入到form表单中进行修改
+   * @param data: 已有数据
+   * @param location: 数据行所在位置, 便于修改保存
+   */
+  function insertDataToForm(data, location) {
+    var $scheduleForm = $('#detail-form');
+    // date parse
+    var dateReg = /(\d+)/;
+    var date = dateReg.exec(data['date'])[0];
+    $scheduleForm.find('input[name="schedule-date"]').val(date);
+    $scheduleForm.find('input[name="schedule-title"]').val(data['title']);
+    $scheduleForm.find('input[name="schedule-detail"]').val(data['detail']);
+    $scheduleForm.find('input[name="schedule-attractions"]').importTags(data['attractions']);
+    $scheduleForm.find('input[name="schedule-restaurants"]').importTags(data['restaurants']);
+    var scheduleThumbnailDropzone = Dropzone.forElement('div#schedule-thumbnail');
   }
 
   /**
@@ -142,11 +215,35 @@
     var duration = row.insertCell();
     duration.innerHTML = data['duration'];
     var hotelView = row.insertCell();
-    hotelView.innerHTML = '<a href="#">View</a>';
+    var hotelViewBtn = document.createElement('button');
+    hotelViewBtn.setAttribute('class', 'btn btn-default view-btn');
+    hotelViewBtn.setAttribute('data-data', '#hotel-' + $hotelsTable.rows.length - 1);
+    hotelViewBtn.innerHTML = '编辑';
+    hotelViewBtn.addEventListener('click', hotelViewBtnClicked);
+    hotelView.appendChild(hotelViewBtn);
     hotelView.setAttribute('class', 'last');
   }
 
-  // TODO: View And Delete Btn Callback
+  /**
+   * 编辑hotel按钮的callback
+   */
+  function hotelViewBtnClicked (e) {
+    e.preventDefault();
+    var dataHref = e.target.dataset['data'];
+    var rankReg = /(\d+)/;
+    var rank = rankReg.exec(dataHref)[0];
+    var $hotelTable = $('#hotels-table')[0];
+    var data = new Object();
+    data['title'] = $hotelTable.rows[rank].cells[0].innerHTML;
+    data['duration'] = $hotelTable.rows[rank].cells[1].innerHTML;
+    insertHotelDataToForm(data, rank);
+  };
+
+  function insertHotelDataToForm(data, location) {
+    var $hotelForm = $('#hotels-form');
+    $hotelForm.find('input#package-hotels-title').val(data['title']);
+    $hotelForm.find('input#package-hotels-duration').val(data['duration']);
+  }
 
   /**
    * Finish Button Event Callback
@@ -240,7 +337,7 @@
       width: 'auto',
       defaultText: '线路标签'
     });
-    $('#schedule-inclusion-tags').tagsInput({
+    $('#schedule-attractions').tagsInput({
       width: 'auto',
       defaultText: '景点名称'
     });
@@ -269,6 +366,7 @@
 
     $('.buttonFinish').addClass('btn btn-default').on('click', onFinishButtonClicked);
     $('#schedule-save-btn').on('click', saveSchedule);
+    $('#schedule-cancel-btn').on('click', resetScheduleForm);
     $('#hotel-save-btn').on('click', saveHotel);
     // Configure Dropzone.js Programmatically for package thumbnails
     Dropzone.options.packageThumbnails = {
@@ -299,7 +397,7 @@
       method: 'POST',
       maxFilesize: 5,
       maxFiles: 1,
-      dictDefaultMessage: '拖拽或点击上传图片, 最多一张, 分辨率为560*460',
+      dictDefaultMessage: '拖拽或点击上传新图片, 最多一张, 分辨率为560*460',
       addRemoveLinks: true,
       init: function() {
         this.on('success', function (file, res) {

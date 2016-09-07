@@ -133,10 +133,10 @@ block content
               .col-md-8.col-sm-8.col-xs-12
                 textarea#schedule-detail.form-control(rows='4', name='schedule-detail', data-parsley-trigger='keyup', data-parsley-minlength='60', data-parsley-maxlength='400')
             .form-group
-              label.control-label.col-md-3.col-sm-3.col-xs-12(for='schedule-tags')
+              label.control-label.col-md-3.col-sm-3.col-xs-12(for='schedule-attractions')
                 | 包含景点
               .col-md-8.col-sm-8.col-xs-12
-                input#schedule-inclusion-tags.tags.form-control(type='text')
+                input#schedule-attractions.tags.form-control(type='text', name='schedule-attractions')
             .form-group
               label.control-label.col-md-3.col-sm-3.col-xs-12(for='schedule-restaurants')
                 | 推荐餐厅
@@ -150,6 +150,9 @@ block content
             .form-group
               .col-md-9.col-sm-9.col-xs-12.col-md-offset-3
                 button#schedule-save-btn.btn.btn-success 保存
+                button#schedule-update-btn.btn.btn-info(disabled='true') 更新
+                button#schedule-cancel-btn.btn.btn-default(disabled='true') 取消
+                button#schedule-delete-btn.btn.btn-danger(disabled='true') 删除
     #step-3
       .row
         .col-xs-10.col-xs-offset-1.table-responsive
