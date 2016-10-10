@@ -111,7 +111,25 @@
       var $detailTableBody = $detailTable.find('tbody');
       $detailTableBody.empty();
       // 2. Add elements into table
-      
+      for (var i = 0; i < data.length; i++) {
+        var element =  data[i];
+        var day = "第" + element['date'] + "天";
+        var dayElement = $('<td class="td_date"></td>').text(day);
+        var titleElement = $('<td class="td_title"></td>').text(element['title']);
+        var detailElement = $('<td class="td_detail"></td>').text(element['detail']);
+        var attractionsElement = $('<td class="td_attraction"></td>').text(element['attractions']);
+        var restaurantsElement = $('<td></td>').text(element['restaurants']);
+        var thumbnailElement = $('<td></td>');
+        var imgElement = $('<img class="schedule_thumbnail"></img>').attr('src', (element['thumbnail']));
+        thumbnailElement.append(imgElement);
+        var scheduleViewElement = $('<td class="last td_action"></td>');
+        var viewBtnElement = $('<button class="btn btn-default view-btn"></button>').attr('data-data', '#schedule-' + i).text('编辑');
+        scheduleViewElement.append(viewBtnElement);
+        viewBtnElement.click(viewBtnClicked);
+        var trElement = $('<tr></tr>').append(dayElement, titleElement, detailElement, attractionsElement,
+          restaurantsElement, thumbnailElement, scheduleViewElement);
+        $detailTableBody.append(trElement);
+      }
 
     } else {
     }
@@ -137,7 +155,7 @@
     // 2. Insert data to dataModel
     dataModel.insert(scheduleData, 'schedules');
     // 3. Update front-end view display.
-    insertScheduleRow(scheduleData);
+    updateTableView('schedules');
     // 4. reset schedule form.
     resetScheduleForm(e);
   }
@@ -248,60 +266,61 @@
     resetScheduleForm(e);
   }
 
-  /**
-   * 插入数据到table中, 其中插入的location就是date-1, 例如第一天就在第一行, insertRow(0), 第二天就在第二行, insertRow(1)
-   * @param data: title, detail, image_url, tags
-   */
-  function insertScheduleRow(data) {
-    var $detailTable = $('#detail-table')[0];
-    var $detailTableBody = $detailTable.getElementsByTagName('tbody')[0];
-    var days = "第" + data['date'] + "天";
-    // 进行插入位置的判断
-    var row = undefined;
-    if (data['date'] > $detailTable.rows.length) {
-      row = $detailTableBody.insertRow();
-    } else {
-      row = $detailTableBody.insertRow(data['date']-1);
-    }
-    var scheduleDay = row.insertCell();
-    scheduleDay.innerHTML = days;
-    scheduleDay.setAttribute('class', 'td_date');
-    var scheduleTitle = row.insertCell();
-    scheduleTitle.innerHTML = data['title'];
-    scheduleTitle.setAttribute('class', 'td_title');
-    var scheduleDetail = row.insertCell();
-    scheduleDetail.innerHTML = data['detail'];
-    scheduleDetail.setAttribute('class', 'td_detail');
-    var scheduleAttractions = row.insertCell();
-    scheduleAttractions.innerHTML = data['attractions'];
-    scheduleAttractions.setAttribute('class', 'td_attraction');
-    var scheduleRestaurants = row.insertCell();
-    scheduleRestaurants.innerHTML = data['restaurants'];
-    var scheduleThumbnail = row.insertCell();
-    var imageNode = document.createElement('img');
-    imageNode.setAttribute('class', 'schedule_thumbnail');
-    if (data['thumbnail']) {
-      imageNode.setAttribute('src', data['thumbnail']);
-    } else {
-      var scheduleThumbnailDropzone = Dropzone.forElement('div#schedule-thumbnail');
-      imageNode.setAttribute('src', scheduleThumbnailDropzone.files[0].url);
-    }
-    scheduleThumbnail.appendChild(imageNode);
-    var scheduleView = row.insertCell();
-    var viewBtnNode = document.createElement('button');
-    viewBtnNode.setAttribute('class', 'btn btn-default view-btn');
-    viewBtnNode.setAttribute('data-data', '#schedule-' + ($detailTable.rows.length - 1));
-    viewBtnNode.innerHTML = '编辑';
-    viewBtnNode.addEventListener('click', viewBtnClicked);
-    scheduleView.setAttribute('class', 'last td_action');
-    scheduleView.appendChild(viewBtnNode);
-  }
+  // /**
+  //  * 插入数据到table中, 其中插入的location就是date-1, 例如第一天就在第一行, insertRow(0), 第二天就在第二行, insertRow(1)
+  //  * @param data: title, detail, image_url, tags
+  //  */
+  // function insertScheduleRow(data) {
+  //   var $detailTable = $('#detail-table')[0];
+  //   var $detailTableBody = $detailTable.getElementsByTagName('tbody')[0];
+  //   var days = "第" + data['date'] + "天";
+  //   // 进行插入位置的判断
+  //   var row = undefined;
+  //   if (data['date'] > $detailTable.rows.length) {
+  //     row = $detailTableBody.insertRow();
+  //   } else {
+  //     row = $detailTableBody.insertRow(data['date']-1);
+  //   }
+  //   var scheduleDay = row.insertCell();
+  //   scheduleDay.innerHTML = days;
+  //   scheduleDay.setAttribute('class', 'td_date');
+  //   var scheduleTitle = row.insertCell();
+  //   scheduleTitle.innerHTML = data['title'];
+  //   scheduleTitle.setAttribute('class', 'td_title');
+  //   var scheduleDetail = row.insertCell();
+  //   scheduleDetail.innerHTML = data['detail'];
+  //   scheduleDetail.setAttribute('class', 'td_detail');
+  //   var scheduleAttractions = row.insertCell();
+  //   scheduleAttractions.innerHTML = data['attractions'];
+  //   scheduleAttractions.setAttribute('class', 'td_attraction');
+  //   var scheduleRestaurants = row.insertCell();
+  //   scheduleRestaurants.innerHTML = data['restaurants'];
+  //   var scheduleThumbnail = row.insertCell();
+  //   var imageNode = document.createElement('img');
+  //   imageNode.setAttribute('class', 'schedule_thumbnail');
+  //   if (data['thumbnail']) {
+  //     imageNode.setAttribute('src', data['thumbnail']);
+  //   } else {
+  //     var scheduleThumbnailDropzone = Dropzone.forElement('div#schedule-thumbnail');
+  //     imageNode.setAttribute('src', scheduleThumbnailDropzone.files[0].url);
+  //   }
+  //   scheduleThumbnail.appendChild(imageNode);
+  //   var scheduleView = row.insertCell();
+  //   var viewBtnNode = document.createElement('button');
+  //   viewBtnNode.setAttribute('class', 'btn btn-default view-btn');
+  //   viewBtnNode.setAttribute('data-data', '#schedule-' + ($detailTable.rows.length - 1));
+  //   viewBtnNode.innerHTML = '编辑';
+  //   viewBtnNode.addEventListener('click', viewBtnClicked);
+  //   scheduleView.setAttribute('class', 'last td_action');
+  //   scheduleView.appendChild(viewBtnNode);
+  // }
 
   /**
-   * view button callback
+   * view button callback,
    */
   function viewBtnClicked(e) {
     e.preventDefault();
+    // parse data index
     var dataHref = e.target.dataset['data'];
     var scheduleRankReg = /#schedule-(\d+)/;
     var rank = undefined;
@@ -311,15 +330,17 @@
       rank = -1;
       return;
     }
-    var data = new Object();
-    var $detailTable = $('#detail-table')[0];
-    var detail = $detailTable.rows[rank].cells;
-    data['date'] = detail[0].innerHTML;
-    data['title'] = detail[1].innerHTML;
-    data['detail'] = detail[2].innerHTML;
-    data['attractions'] = detail[3].innerHTML;
-    data['restaurants'] = detail[4].innerHTML;
-    data['thumbnails'] = detail[5].innerHTML;
+    // get data from model
+    var data = dataModel.get('schedules', rank);
+    // var data = new Object();
+    // var $detailTable = $('#detail-table')[0];
+    // var detail = $detailTable.rows[rank].cells;
+    // data['date'] = detail[0].innerHTML;
+    // data['title'] = detail[1].innerHTML;
+    // data['detail'] = detail[2].innerHTML;
+    // data['attractions'] = detail[3].innerHTML;
+    // data['restaurants'] = detail[4].innerHTML;
+    // data['thumbnails'] = detail[5].innerHTML;
     insertDataToForm(data, rank);
     // 将表单状态修改为只能更新
     changeScheduleFormDisabledStatus(false, rank);
