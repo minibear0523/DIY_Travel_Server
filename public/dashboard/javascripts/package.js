@@ -132,6 +132,22 @@
       }
 
     } else {
+      // 1. clean hotel table view
+      var $hotelTable = $('#hotels-table');
+      var $hotelTableBody = $hotelTable.find('tbody');
+      $hotelTableBody.empty();
+      // 2. add elements into table
+      for (var i = 0; i < data.length; i++) {
+        var element = data[i];
+        var titleElement = $('<td></td>').text(element['title']);
+        var durationElement = $('<td></td>').text(element['duration']);
+        var viewBtnElement = $('<td class="last"></td>');
+        var viewBtn = $('<button class="btn btn-default view-btn"></button>').attr('data-data', '#hotel-' + i).text('编辑');
+        viewBtn.click(hotelViewBtnClicked);
+        viewBtnElement.append(viewBtn);
+        var trElement = $('<tr></tr>').append(titleElement, durationElement, viewBtnElement);
+        $hotelTableBody.append(trElement);
+      }
     }
   }
 
@@ -176,14 +192,16 @@
     scheduleData['detail'] = $detailForm.elements[2].value;
     scheduleData['attractions'] = $detailForm.elements[3].value;
     scheduleData['restaurants'] = $detailForm.elements[5].value;
-    scheduleData['thumbnail'] = $detailTable.rows[row].cells[5].getElementsByTagName('img')[0].getAttribute('src');
-    insertScheduleRow(scheduleData);
-    resetScheduleForm(e);
-    if (row != scheduleData['date']) {
-      deleteScheduleRow(e);
-      // 删除之后还需要修改view-btn的data-date值
-      refreshScheduleViewBtnData();
+    // 判断是否上传了新图片
+    var scheduleThumbnailDropzone = Dropzone.forElement('div#schedule-thumbnail');
+    if (scheduleThumbnailDropzone.files.length > 0) {
+      scheduleData['thumbnail'] - scheduleThumbnailDropzone.files[0].url;
+    } else {
+      scheduleData['thumbnail'] = dataModel.get('schedules', row)['thumbnail'];
     }
+    dataModel.update(scheduleData, 'schedules', row);
+    updateTableView('schedules');
+    resetScheduleForm(e);
   }
 
   /**
@@ -250,70 +268,23 @@
    */
   function deleteScheduleRow(e) {
     e.preventDefault();
-    var rank = e.target.dataset['data'];
-    var $detailTable = $('#detail-table')[0];
-    // 删除服务器上的图片, 不需要同步执行
-    var imageSrc = $detailTable.rows[rank].cells[5].childNodes[0].getAttribute('src');
+    // 1. parse data index
+    var dataIndex = e.target.dataset['data'];
+    // 2. delete image from model.
+    var data = dataModel.get('schedules', dataIndex);
+    var imageSrc = data['thumbnail'];
     $.ajax({
       url: '/uploads' + imageSrc,
       method: 'DELETE'
     }).error(function(_, status, err) {
       console.error(err);
     });
-    // 删除table中的位置
-    var $detailTableBody = $detailTable.getElementsByTagName('tbody')[0];
-    $detailTableBody.deleteRow(rank-1);
+    // 3. delete data from model.
+    dataModel.delete('schedules', dataIndex);
+    // 4. update table view.
+    updateTableView('schedules');
     resetScheduleForm(e);
   }
-
-  // /**
-  //  * 插入数据到table中, 其中插入的location就是date-1, 例如第一天就在第一行, insertRow(0), 第二天就在第二行, insertRow(1)
-  //  * @param data: title, detail, image_url, tags
-  //  */
-  // function insertScheduleRow(data) {
-  //   var $detailTable = $('#detail-table')[0];
-  //   var $detailTableBody = $detailTable.getElementsByTagName('tbody')[0];
-  //   var days = "第" + data['date'] + "天";
-  //   // 进行插入位置的判断
-  //   var row = undefined;
-  //   if (data['date'] > $detailTable.rows.length) {
-  //     row = $detailTableBody.insertRow();
-  //   } else {
-  //     row = $detailTableBody.insertRow(data['date']-1);
-  //   }
-  //   var scheduleDay = row.insertCell();
-  //   scheduleDay.innerHTML = days;
-  //   scheduleDay.setAttribute('class', 'td_date');
-  //   var scheduleTitle = row.insertCell();
-  //   scheduleTitle.innerHTML = data['title'];
-  //   scheduleTitle.setAttribute('class', 'td_title');
-  //   var scheduleDetail = row.insertCell();
-  //   scheduleDetail.innerHTML = data['detail'];
-  //   scheduleDetail.setAttribute('class', 'td_detail');
-  //   var scheduleAttractions = row.insertCell();
-  //   scheduleAttractions.innerHTML = data['attractions'];
-  //   scheduleAttractions.setAttribute('class', 'td_attraction');
-  //   var scheduleRestaurants = row.insertCell();
-  //   scheduleRestaurants.innerHTML = data['restaurants'];
-  //   var scheduleThumbnail = row.insertCell();
-  //   var imageNode = document.createElement('img');
-  //   imageNode.setAttribute('class', 'schedule_thumbnail');
-  //   if (data['thumbnail']) {
-  //     imageNode.setAttribute('src', data['thumbnail']);
-  //   } else {
-  //     var scheduleThumbnailDropzone = Dropzone.forElement('div#schedule-thumbnail');
-  //     imageNode.setAttribute('src', scheduleThumbnailDropzone.files[0].url);
-  //   }
-  //   scheduleThumbnail.appendChild(imageNode);
-  //   var scheduleView = row.insertCell();
-  //   var viewBtnNode = document.createElement('button');
-  //   viewBtnNode.setAttribute('class', 'btn btn-default view-btn');
-  //   viewBtnNode.setAttribute('data-data', '#schedule-' + ($detailTable.rows.length - 1));
-  //   viewBtnNode.innerHTML = '编辑';
-  //   viewBtnNode.addEventListener('click', viewBtnClicked);
-  //   scheduleView.setAttribute('class', 'last td_action');
-  //   scheduleView.appendChild(viewBtnNode);
-  // }
 
   /**
    * view button callback,
@@ -332,15 +303,6 @@
     }
     // get data from model
     var data = dataModel.get('schedules', rank);
-    // var data = new Object();
-    // var $detailTable = $('#detail-table')[0];
-    // var detail = $detailTable.rows[rank].cells;
-    // data['date'] = detail[0].innerHTML;
-    // data['title'] = detail[1].innerHTML;
-    // data['detail'] = detail[2].innerHTML;
-    // data['attractions'] = detail[3].innerHTML;
-    // data['restaurants'] = detail[4].innerHTML;
-    // data['thumbnails'] = detail[5].innerHTML;
     insertDataToForm(data, rank);
     // 将表单状态修改为只能更新
     changeScheduleFormDisabledStatus(false, rank);
@@ -393,26 +355,38 @@
     var hotelData = new Object();
     hotelData['title'] = $hotelForm.elements[0].value;
     hotelData['duration'] = $hotelForm.elements[1].value;
-    insertHotelRow(hotelData);
-    $hotelForm.reset();
+    dataModel.insert(hotelData, 'hotels');
+    updateTableView('hotels');
+    resetHotelForm(e);
   }
 
-  function insertHotelRow(data) {
-    var $hotelsTable = $('#hotels-table > tbody')[0];
-    var row = $hotelsTable.insertRow();
-    var title = row.insertCell();
-    title.innerHTML = data['title'];
-    var duration = row.insertCell();
-    duration.innerHTML = data['duration'];
-    var hotelView = row.insertCell();
-    var hotelViewBtn = document.createElement('button');
-    hotelViewBtn.setAttribute('class', 'btn btn-default view-btn');
-    hotelViewBtn.setAttribute('data-data', '#hotel-' + $hotelsTable.rows.length - 1);
-    hotelViewBtn.innerHTML = '编辑';
-    hotelViewBtn.addEventListener('click', hotelViewBtnClicked);
-    hotelView.appendChild(hotelViewBtn);
-    hotelView.setAttribute('class', 'last');
-  }
+  function updateHotel(e) {
+    e.preventDefault();
+    var dataIndex = e.target.dataset['data'];
+    var $hotelForm = $('#hotels-form')[0];
+    var hotelData = new Object();
+    hotelData['title'] = $hotelForm.elements[0].value;
+    hotelData['duration'] = $hotelForm.elements[1].value;
+    dataModel.update(hotelData, 'hotels', dataIndex);
+    updateTableView('hotels');
+    resetHotelForm(e);
+  };
+
+  function deleteHotel(e) {
+    e.preventDefault();
+    var $hotelForm = $('#hotels-form')[0];
+    var dataIndex = e.target.dataset['data'];
+    dataModel.delete('hotels', dataIndex);
+    updateTableView('hotels');
+    resetHotelForm(e);
+  };
+
+  function resetHotelForm(e) {
+    e.preventDefault();
+    var $hotelForm = $('#hotels-form')[0];
+    $hotelForm.reset();
+    changeHotelFormDisabledStatus(true, undefined);
+  };
 
   /**
    * 编辑hotel按钮的callback
@@ -420,19 +394,40 @@
   function hotelViewBtnClicked (e) {
     e.preventDefault();
     var dataHref = e.target.dataset['data'];
-    var rankReg = /(\d+)/;
-    var rank = rankReg.exec(dataHref)[0];
-    var $hotelTable = $('#hotels-table')[0];
-    var data = new Object();
-    data['title'] = $hotelTable.rows[rank].cells[0].innerHTML;
-    data['duration'] = $hotelTable.rows[rank].cells[1].innerHTML;
+    var rankReg = /#hotel-(\d+)/;
+    var rank = undefined;
+    if (rankReg.test(dataHref)) {
+      rank = rankReg.exec(dataHref)[1];
+    } else {
+      rank = -1;
+      return;
+    }
+    var data = dataModel.get('hotels', rank);
     insertHotelDataToForm(data, rank);
+    changeHotelFormDisabledStatus(false, rank);
+
+    $('#hotel-update-btn').attr('data-data', rank);
+    $('#hotel-delete-btn').attr('data-data', rank);
   };
 
   function insertHotelDataToForm(data, location) {
     var $hotelForm = $('#hotels-form');
     $hotelForm.find('input#package-hotels-title').val(data['title']);
     $hotelForm.find('input#package-hotels-duration').val(data['duration']);
+  }
+
+  function changeHotelFormDisabledStatus(status, location) {
+    if (status) {
+      $('#hotel-update-btn').attr('disabled', 'true');
+      $('#hotel-cancel-btn').attr('disabled', 'true');
+      $('#hotel-delete-btn').attr('disabled', 'true');
+      $('#hotel-save-btn').removeAttr('disabled');
+    } else {
+      $('#hotel-update-btn').removeAttr('disabled');
+      $('#hotel-cancel-btn').removeAttr('disabled');
+      $('#hotel-delete-btn').removeAttr('disabled');
+      $('#hotel-save-btn').attr('disabled', 'true');
+    }
   }
 
   /**
@@ -461,32 +456,19 @@
     data['package_thumbnails'] = thumbnailsUrls;
 
     // 1.2 Schedule Detail
-    var scheduleData = new Array();
-    var $detailTable = $('#detail-table')[0];
-    for (var i = 1; i < $detailTable.rows.length; i++) {
-      var $detail = $detailTable.rows[i].cells;
-      var schedule = new Object();
-      schedule['day'] = $detail[0].innerHTML;
-      schedule['title'] = $detail[1].innerHTML;
-      schedule['detail'] = $detail[2].innerHTML;
-      schedule['inclusion'] = $detail[3].innerHTML.split(',').map(function(str){
+    data['schedules'] = dataModel.get('schedules', -1);
+    data['schedules'].forEach(function(schedule) {
+      schedule['attractions'] = schedule['attractions'].split(',').map(function(str) {
         return str.trim();
       });
-      schedule['thumbnail'] = $detail[4].getElementsByTagName('img')[0].getAttribute('src');
-      scheduleData.push(schedule);
-    }
-    data['schedule'] = scheduleData;
+      schedule['restaurants'] = schedule['restaurants'].split(',').map(function(str) {
+        return str.trim();
+      });
+    });
+
     // 1.3 Hotel Detail
-    var hotelsData = new Array();
-    var $hotelTable = $('#hotels-table')[0];
-    for (var i = 1; i < $hotelTable.rows.length; i++) {
-      var $detail = $hotelTable.rows[i].cells;
-      var hotel = new Object();
-      hotel['name'] = $detail[0].innerHTML;
-      hotel['duration'] = $detail[1].innerHTML;
-      hotelsData.push(hotel);
-    }
-    data['hotels'] = hotelsData;
+    data['hotels'] = dataModel.get('hotels', -1);
+
     // 1.4 Inclusion And Exclusion Detail
     var $inclusionExclusionForm = $('#inclusion-exclusion-form')[0];
     var inclusionData = $inclusionExclusionForm.elements[0].value.split(',').map(function(str) {return str.trim();});
@@ -502,8 +484,8 @@
       contentType: 'application/json'
     }).success(function(data, status, _) {
         if (status == 'success') {
-          var packageId = data;
-          location.href = '/packages/package/' + data;
+          var packageId = data['_id'];
+          location.href = '/packages/detail/' + packageId;
         }
       })
       .error(function(_, status, err) {
@@ -535,6 +517,14 @@
       width: 'auto',
       defaultText: '当日推荐'
     });
+    $('#package-inclusion').tagsInput({
+      width: 'auto',
+      defaultText: '包含内容'
+    });
+    $('#package-exclusion').tagsInput({
+      width: 'auto',
+      defaultText: '不包含内容'
+    });
     // $('.tags').tagsInput({
     //   'width': 'auto'
     // });
@@ -560,6 +550,9 @@
     $('#schedule-delete-btn').on('click', deleteScheduleRow);
     $('#schedule-update-btn').on('click', updateSchedule);
     $('#hotel-save-btn').on('click', saveHotel);
+    $('#hotel-update-btn').on('click', updateHotel);
+    $('#hotel-delete-btn').on('click', deleteHotel);
+    $('#hotel-cancel-btn').on('click', resetHotelForm);
     // Configure Dropzone.js Programmatically for package thumbnails
     Dropzone.options.packageThumbnails = {
       paramName: 'thumbnail',

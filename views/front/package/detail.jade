@@ -84,7 +84,7 @@ block content
                     .col-md-3.col-sm-3.clear-padding
                       img(src='/front/images/media/detail/TheEdoSakura.png', alt='#{hotel.name}')
                     .col-md-9.col-sm-9
-                      h5 #{hotel.name}
+                      h5 #{hotel.title}
                       p 出门步行5分钟就可以达到地铁入谷站, 出行十分方便. 房间很新, 非常有日式风情, 而且干净整洁, 周围环境很安静.
                     .clearfix
               //.inclusion-wrapper
@@ -137,7 +137,7 @@ block content
                 .daily-schedule
                   .title
                     p
-                      span #{schedule.day}
+                      span 第#{schedule.date}天
                       | #{schedule.title}
                   .daily-schedule-body
                     .col-md-4.col-sm-4
@@ -148,7 +148,7 @@ block content
                     .clearfix
                     .col-md-12.activity
                       h4 包括:
-                      - each tag in schedule.inclusion
+                      - each tag in schedule.attractions
                         .col-md-6.col-sm-6
                           p
                             i.fa.fa-check-square
