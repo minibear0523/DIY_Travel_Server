@@ -74,8 +74,7 @@ router.post('/package', function(req, res, next) {
     // create new package
     var package = new Package(data);
     package
-      .save(function(package) {
-        console.log(package);
+      .save(function(result) {
         res.status(201).send(package);
       })
       .catch(function(err) {
