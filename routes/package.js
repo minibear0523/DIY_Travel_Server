@@ -38,10 +38,10 @@ router.get('/package/:id', function(req, res, next) {
         res.status(200).send(package);
       })
       .catch(function(err) {
-        res.status(404).send(err);
+        res.status(400).send(err);
       })
   } else {
-    res.status(400).send('Not Found Package')
+    res.status(404).send('Not Found Package')
   }
 });
 

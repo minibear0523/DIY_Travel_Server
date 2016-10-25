@@ -8,9 +8,14 @@
    * @return: 插入成功返回true, 失败返回false
    */
   var dataModelInsert = function (data, type) {
-    this.data[type].push(data);
-    if (type == 'schedules') {
-      this.sort();
+    if (type == 'inclusion_exclusion') {
+      var dataType = data['type'];
+      this.data[type][dataType].push(data);
+    } else {
+      this.data[type].push(data);
+      if (type == 'schedules') {
+        this.sort();
+      }
     }
   };
 
@@ -23,6 +28,9 @@
   var dataModelUpdate = function (data, type, index) {
     if (index > this.data[type].length) {
       return false;
+    } else if (type == 'inclusion_exclusion') {
+      var dataType = data['type'];
+      this.data[type][dataType][index] = data;
     } else {
       this.data[type][index] = data;
       if (type == 'schedules') {
@@ -36,8 +44,12 @@
    * @param type: 同上
    * @param index: 位置
    */
-  var dataModelDelete = function (type, index) {
-    this.data[type].splice(index, 1);
+  var dataModelDelete = function (type, index, inclusionOrExclusionType) {
+    if (type == 'inclusion_exclusion') {
+      this.data[type][inclusionOrExclusionType].splice(index, 1);
+    } else {
+      this.data[type].splice(index, 1);
+    }
   };
 
   /**
@@ -70,9 +82,15 @@
    * @param type: 同上, all表示所有的数据, 即this.data
    * @param index: -1时表示获取全部数据, >=0时表示对应单体数据
    */
-  var dataModelGet = function (type, index) {
+  var dataModelGet = function (type, index, inclusion_exclusion) {
     if (type == 'all') {
       return this.data;
+    } else if (type == 'inclusion_exclusion') {
+      if (index == -1) {
+        return this.data[type];
+      } else {
+        return this.data[type][inclusion_exclusion][index];
+      }
     } else {
       if (index == -1) {
         return this.data[type];
@@ -87,7 +105,7 @@
    */
   var DataModel = function () {
     var obj = {
-      data: {'schedules': [], 'hotels': []},
+      data: {'schedules': [], 'hotels': [], 'inclusion_exclusion': {'inclusion': [], 'exclusion': []}},
       insert: dataModelInsert,
       update: dataModelUpdate,
       delete: dataModelDelete,
@@ -104,7 +122,7 @@
    * @param type: schedules, hotels
    */
   function updateTableView (type) {
-    var data = dataModel.get(type, -1);
+    var data = dataModel.get(type, -1, undefined);
     if (type == 'schedules') {
       // 1. Clean the table body
       var $detailTable = $('#detail-table');
@@ -112,7 +130,7 @@
       $detailTableBody.empty();
       // 2. Add elements into table
       for (var i = 0; i < data.length; i++) {
-        var element =  data[i];
+        var element = data[i];
         var day = "第" + element['date'] + "天";
         var dayElement = $('<td class="td_date"></td>').text(day);
         var titleElement = $('<td class="td_title"></td>').text(element['title']);
@@ -131,7 +149,39 @@
         $detailTableBody.append(trElement);
       }
 
-    } else {
+    } else if (type == 'inclusion_exclusion') {
+      // 1. clean the table body
+      var $inclusionExclusionTable = $('#inclusion-exclusion-table');
+      var $inclusionExclusionTableBody = $inclusionExclusionTable.find('tbody');
+      $inclusionExclusionTableBody.empty();
+
+      // 2. add elements into table
+      // 2.1 inclusion elements
+      for (var i = 0; i < data['inclusion'].length; i++) {
+        var element = data['inclusion'][i];
+        var typeElement = $('<td class="tag_type"></td>').text('包含');
+        var contentElement = $('<td class="tag_content"></td>').text(element['content']);
+        var viewBtnElement = $('<td class="last"></td>');
+        var viewBtn = $('<button class="btn btn-default view-btn"></button>').attr('data-data', '#inclusion-' + i).text('编辑');
+        viewBtn.click(inclusionExclusionViewBtnClicked);
+        viewBtnElement.append(viewBtn);
+        var trElement = $('<tr></tr>').append(typeElement, contentElement, viewBtnElement);
+        $inclusionExclusionTableBody.append(trElement);
+      }
+      // 2.2 exclusion elements
+      for (var i = 0; i < data['exclusion'].length; i++) {
+        var element = data['exclusion'][i];
+        var typeElement = $('<td class="tag_type"></td>').text('不包含');
+        var contentElement = $('<td class="tag_content"></td>').text(element['content']);
+        var viewBtnElement = $('<td class="last"></td>');
+        var viewBtn = $('<button class="btn btn-default view-btn"></button>').attr('data-data', '#exclusion-' + i).text('编辑');
+        viewBtn.click(inclusionExclusionViewBtnClicked);
+        viewBtnElement.append(viewBtn);
+        var trElement = $('<tr></tr>').append(typeElement, contentElement, viewBtnElement);
+        $inclusionExclusionTableBody.append(trElement);
+      }
+
+    } else if (type == 'hotels') {
       // 1. clean hotel table view
       var $hotelTable = $('#hotels-table');
       var $hotelTableBody = $hotelTable.find('tbody');
@@ -197,7 +247,7 @@
     if (scheduleThumbnailDropzone.files.length > 0) {
       scheduleData['thumbnail'] - scheduleThumbnailDropzone.files[0].url;
     } else {
-      scheduleData['thumbnail'] = dataModel.get('schedules', row)['thumbnail'];
+      scheduleData['thumbnail'] = dataModel.get('schedules', row, undefined)['thumbnail'];
     }
     dataModel.update(scheduleData, 'schedules', row);
     updateTableView('schedules');
@@ -271,7 +321,7 @@
     // 1. parse data index
     var dataIndex = e.target.dataset['data'];
     // 2. delete image from model.
-    var data = dataModel.get('schedules', dataIndex);
+    var data = dataModel.get('schedules', dataIndex, undefined);
     var imageSrc = data['thumbnail'];
     $.ajax({
       url: '/uploads' + imageSrc,
@@ -280,7 +330,7 @@
       console.error(err);
     });
     // 3. delete data from model.
-    dataModel.delete('schedules', dataIndex);
+    dataModel.delete('schedules', dataIndex, undefined);
     // 4. update table view.
     updateTableView('schedules');
     resetScheduleForm(e);
@@ -302,7 +352,7 @@
       return;
     }
     // get data from model
-    var data = dataModel.get('schedules', rank);
+    var data = dataModel.get('schedules', rank, undefined);
     insertDataToForm(data, rank);
     // 将表单状态修改为只能更新
     changeScheduleFormDisabledStatus(false, rank);
@@ -376,7 +426,7 @@
     e.preventDefault();
     var $hotelForm = $('#hotels-form')[0];
     var dataIndex = e.target.dataset['data'];
-    dataModel.delete('hotels', dataIndex);
+    dataModel.delete('hotels', dataIndex, undefined);
     updateTableView('hotels');
     resetHotelForm(e);
   };
@@ -402,7 +452,7 @@
       rank = -1;
       return;
     }
-    var data = dataModel.get('hotels', rank);
+    var data = dataModel.get('hotels', rank, undefined);
     insertHotelDataToForm(data, rank);
     changeHotelFormDisabledStatus(false, rank);
 
@@ -430,6 +480,97 @@
     }
   }
 
+  function resetInclusionExclusionForm(e) {
+    e.preventDefault();
+    var $inclusionExclusionForm = $('#inclusion-exclusion-form')[0];
+    $inclusionExclusionForm.reset();
+    changeInclusionExclusionFormDisabledStatus(true);
+  }
+
+  function insertInclusionExclusionDataToForm(data, dataIndex) {
+    var $inclusionExclusionForm = $('#inclusion-exclusion-form');
+    $inclusionExclusionForm.find('select#package-inclusion-exclusion-type').val(data['type']);
+    $inclusionExclusionForm.find('textarea#package-inclusion-exclusion-content').val(data['content']);
+  }
+
+  function changeInclusionExclusionFormDisabledStatus(status) {
+    if (status) {
+      $('#inclusion-exclusion-update-btn').attr('disabled', 'true');
+      $('#inclusion-exclusion-cancel-btn').attr('disabled', 'true');
+      $('#inclusion-exclusion-delete-btn').attr('disabled', 'true');
+      $('#inclusion-exclusion-save-btn').removeAttr('disabled');
+    } else {
+      $('#inclusion-exclusion-update-btn').removeAttr('disabled');
+      $('#inclusion-exclusion-cancel-btn').removeAttr('disabled');
+      $('#inclusion-exclusion-delete-btn').removeAttr('disabled');
+      $('#inclusion-exclusion-save-btn').attr('disabled', 'true');
+    }
+  }
+
+  function saveInclusionExclusion(e) {
+    e.preventDefault();
+    var $inclusionExclusionForm = $('#inclusion-exclusion-form')[0];
+    var inclusionExclusionData = new Object();
+    inclusionExclusionData['type'] = $inclusionExclusionForm.elements[0].value;
+    inclusionExclusionData['content'] = $inclusionExclusionForm.elements[1].value;
+    dataModel.insert(inclusionExclusionData, 'inclusion_exclusion');
+    updateTableView('inclusion_exclusion');
+    resetInclusionExclusionForm(e);
+  };
+
+  function updateInclusionExclusion(e) {
+    e.preventDefault();
+    var dataIndex = e.target.dataset['data'];
+    var dataType = e.target.dataset['type'];
+    var $inclusionExclusionForm = $('#inclusion-exclusion-form')[0];
+    var inclusionExclusionData = new Object();
+    inclusionExclusionData['type'] = $inclusionExclusionForm.elements[0].value;
+    inclusionExclusionData['content'] = $inclusionExclusionForm.elements[1].value;
+    if (dataType == inclusionExclusionData['type']) {
+      // 相同类型
+      dataModel.update(inclusionExclusionData, 'inclusion_exclusion', dataIndex);
+    } else {
+      // 不同类型
+      dataModel.delete('inclusion_exclusion', dataIndex, dataType);
+      dataModel.insert(inclusionExclusionData, 'inclusion_exclusion');
+    }
+    updateTableView('inclusion_exclusion');
+    resetInclusionExclusionForm(e);
+  };
+
+  function deleteInclusionExclusion(e) {
+    e.preventDefault();
+    var $inclusionExclusionForm = $('#inclusion-exclusion-form')[0];
+    var dataIndex = e.target.dataset['data'];
+    var dataType = e.target.dataset['type'];
+    dataModel.delete('inclusion_exclusion', dataIndex, dataType);
+    updateTableView('inclusion_exclusion');
+    resetInclusionExclusionForm(e);
+  };
+
+  function inclusionExclusionViewBtnClicked(e) {
+    e.preventDefault();
+    var dataHref = e.target.dataset['data'];
+    var inclusionExclusionReg = /#([a-z]*)-(\d+)/;
+    var dataType = undefined;
+    var dataIndex = undefined;
+    if (inclusionExclusionReg.test(dataHref)) {
+      dataType = inclusionExclusionReg.exec(dataHref)[1];
+      dataIndex = inclusionExclusionReg.exec(dataHref)[2];
+    } else {
+      dataType = undefined;
+      dataIndex = undefined;
+      return;
+    }
+    var data = dataModel.get('inclusion_exclusion', dataIndex, dataType);
+    insertInclusionExclusionDataToForm(data, dataIndex);
+    changeInclusionExclusionFormDisabledStatus(false);
+    $('#inclusion-exclusion-update-btn').attr('data-data', dataIndex);
+    $('#inclusion-exclusion-update-btn').attr('data-type', dataType);
+    $('#inclusion-exclusion-delete-btn').attr('data-data', dataIndex);
+    $('#inclusion-exclusion-delete-btn').attr('data-type', dataType);
+  };
+
   /**
    * Finish Button Event Callback
    */
@@ -456,7 +597,7 @@
     data['package_thumbnails'] = thumbnailsUrls;
 
     // 1.2 Schedule Detail
-    data['schedules'] = dataModel.get('schedules', -1);
+    data['schedules'] = dataModel.get('schedules', -1, undefined);
     data['schedules'].forEach(function(schedule) {
       schedule['attractions'] = schedule['attractions'].split(',').map(function(str) {
         return str.trim();
@@ -467,12 +608,19 @@
     });
 
     // 1.3 Hotel Detail
-    data['hotels'] = dataModel.get('hotels', -1);
+    data['hotels'] = dataModel.get('hotels', -1, undefined);
 
     // 1.4 Inclusion And Exclusion Detail
-    var $inclusionExclusionForm = $('#inclusion-exclusion-form')[0];
-    var inclusionData = $inclusionExclusionForm.elements[0].value.split(',').map(function(str) {return str.trim();});
-    var exclusionData = $inclusionExclusionForm.elements[2].value.split(',').map(function(str) {return str.trim();});
+    var inclusionDataList = dataModel.get('inclusion_exclusion', -1, undefined)['inclusion'];
+    var exclusionDataList = dataModel.get('inclusion_exclusion', -1, undefined)['exclusion'];
+    var inclusionData = new Array();
+    var exclusionData = new Array();
+    for (var i = 0; i < inclusionDataList.length; i++) {
+      inclusionData.push(inclusionDataList[i]['content']);
+    }
+    for (var i = 0; i < exclusionDataList.length; i++) {
+      exclusionData.push(exclusionDataList[i]['content']);
+    }
     data['inclusion'] = inclusionData;
     data['exclusion'] = exclusionData;
     // Step2: Upload all data to server
@@ -553,6 +701,10 @@
     $('#hotel-update-btn').on('click', updateHotel);
     $('#hotel-delete-btn').on('click', deleteHotel);
     $('#hotel-cancel-btn').on('click', resetHotelForm);
+    $('#inclusion-exclusion-save-btn').on('click', saveInclusionExclusion);
+    $('#inclusion-exclusion-update-btn').on('click', updateInclusionExclusion);
+    $('#inclusion-exclusion-delete-btn').on('click', deleteInclusionExclusion);
+    $('#inclusion-exclusion-cancel-btn').on('click', resetInclusionExclusionForm);
     // Configure Dropzone.js Programmatically for package thumbnails
     Dropzone.options.packageThumbnails = {
       paramName: 'thumbnail',
