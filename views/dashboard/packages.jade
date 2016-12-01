@@ -1,0 +1,26 @@
+extends layout
+block css-external
+  link(rel='stylesheet', href='/dashboard/vendors/datatables/dataTables.bootstrap.css')
+
+block content
+  .row
+    .col-xs-12
+      .box
+        .box-header
+          h3.box-title 线路列表
+        .box-body
+          table#packages-table.table.table-bordered.table-hover
+            thead
+              tr
+                th 线路名称
+                th 出发地
+                th 天数
+                th 目的地
+                th 价格
+                th 标签
+            tbody
+
+
+
+block js-external
+  script(src='/dashboard/javascripts/packages.js')

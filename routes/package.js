@@ -83,4 +83,33 @@ router.post('/package', function(req, res, next) {
   }
 });
 
+/**
+ * 线路列表GET请求
+ */
+router.get('/packages', function(req, res, next) {
+  var start = parseInt(req.query.start) || 0;
+  var limit = parseInt(req.query.limit) || 10;
+  Package
+    .find()
+    .select('title _id')
+    .skip(start*limit)
+    .limit(limit)
+    .exec()
+    .then(function(packages) {
+      var result = [];
+      for (var i = 0; i < packages.length; i++) {
+        var package = packages[i];
+        result.push({
+          'title': package.title,
+          'link': '/packages/detail/' + package._id
+        });
+      }
+      res.status(200).send(result);
+    })
+    .catch(function(err) {
+      console.log(err);
+      res.status(404).send('错误');
+    })
+});
+
 module.exports = router;

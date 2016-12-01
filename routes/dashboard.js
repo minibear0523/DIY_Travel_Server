@@ -14,4 +14,11 @@ router.get('/package', function(req, res, next) {
   res.render('dashboard/package');
 });
 
+/**
+ * 线路列表页面GET请求
+ */
+router.get('/packages', function(req, res, next) {
+  res.render('dashboard/packages');
+});
+
 module.exports = router;
